@@ -1,0 +1,1362 @@
+<!doctype html>
+<html lang="ZH">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../Static/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="../../Static/css/all.min.css">
+
+    <title>Meal Match</title>
+
+
+</head>
+
+
+<body>
+
+<!-----------------------------------------  NavBar ----------------------------------------->
+<nav class="navbar navbar-expand-lg navbar-light border-bottom" >
+    <a class="navbar-brand" href="/">Meal Match</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home </a>
+            </li>
+            <!-----------------------------------------  Meal type dropdown list ----------------------------------------->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Meal Type
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/search?filter=4&string=">Appetizers & Snacks</a>
+                    <a class="dropdown-item" href="/search?filter=5&string=">Breakfast & Brunch</a>
+                    <a class="dropdown-item" href="/search?filter=6&string=">Lunch</a>
+                    <a class="dropdown-item" href="/search?filter=7&string=">Desserts</a>
+                    <a class="dropdown-item" href="/search?filter=8&string=">Dinner</a>
+                    <a class="dropdown-item" href="/search?filter=9&string=">Drinks</a>
+                </div>
+            </li>
+
+        </ul>
+
+        <!-----------------------------------------  Share recipe button ----------------------------------------->
+        <button type="button" class="btn btn-warning px-3 mx-3" id = "publish_button">Share My Recipe</button>
+
+        <!-----------------------------------------  User icon ----------------------------------------->
+        <div class="nav-item px-1 mx-2" id="user_icon_dropdown">
+            <a role="button" id="user_icon">
+                <img src="../../Static/icon/person-circle.svg" alt="" width="32" height="32" title="User">
+            </a>
+
+        </div>
+
+        <!-----------------------------------------  Sign in form modal ----------------------------------------->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="alert alert-warning alert-dismissible fade show text-center d-none" role="alert" id = "publish_alert">
+                <strong>Please sign in first</strong>.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Sign in</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="px-4 py-3 border" id="sign_in_form">
+                            <!-----------------------------------------  Email and user name input form ----------------------------------------->
+                            <div class="form-group">
+                                <label for="email"><i class="far fa-envelope mx-1"></i> Email address / <i class="far fa-user mx-1"></i>Username</label>
+                                <input type="email" class="form-control" id="email" placeholder="email@mealmatch.com" required>
+                                <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            </div>
+
+                            <!-----------------------------------------  Password input form ----------------------------------------->
+                            <div class="form-group">
+                                <label for="password"><i class="fas fa-key mx-1"></i> Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                            </div>
+
+                            <!----------------------------------------- Remember me check box ----------------------------------------->
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="dropdownCheck">
+                                        <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                                        Remember me
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-----------------------------------------  Sign in button ----------------------------------------->
+                            <button type="button" class="btn btn-warning" id = "signin_button">Sign in</button>
+                        </form>
+                        <div class="dropdown-divider border-warning"></div>
+
+                        <!-----------------------------------------  sign up link ----------------------------------------->
+                        <a class="dropdown-item" href="/signup">New around here? Sign up</a>
+
+                        <!-----------------------------------------  Reset password link ----------------------------------------->
+                        <a class="dropdown-item" href="/forgot_pw">Forgot password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<!-----------------------------------------  Login success alert ----------------------------------------->
+<div class="" role="alert" id = "homepage_login_success_alert"></div>
+
+<br>
+
+
+
+
+<div id="ingredients_selector" class="container-fluid">
+
+    <div class="container">
+
+    <br>
+
+        <!-----------------------------------------  search bar  ----------------------------------------->
+    <div class="input-group mb-3 border-light">
+        <input type="text" class="form-control" placeholder="ingredients or dish" aria-label="ingredients or dish" aria-describedby="button-addon2" id="search_info">
+        <div class="input-group-append">
+            <button class="btn btn-light border-light" type="button" id="button-addon2" onclick="search()">Search</button>
+        </div>
+    </div>
+
+        <!-----------------------------------------  recommendation list ----------------------------------------->
+        <ul class="nav border" id="recommend_list">
+            <li class="nav-item">
+                <a class="h6 nav-link disabled"tabindex="-1" aria-disabled="true">Do you have:</a>
+            </li>
+            <div class="form-check form-check-inline"></div>
+        </ul>
+        <br>
+
+    </div>
+
+    <!----------------------------------------- ingredient selector  ----------------------------------------->
+    <div class="row">
+        <div class="col-md-3 border text-center"><a class="text-black-50">Ingredient selector</a>
+
+            <!-----------------------------------------  ingredient type collapse ----------------------------------------->
+            <div class="accordion" id="ingredients_selector_accordion">
+                <div class="card">
+                    <div id="ingredient_accordion_header1">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1" id="accordion_1">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/dairy.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Dairy</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_1_img">
+                                </a>
+                            </button>
+                        </h2>
+                    </div>
+
+
+                    <div id="collapse1" class="collapse" aria-labelledby="ingredient_accordion_header1" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form1"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header2">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2" id="accordion_2">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/baking&grains.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Baking and grains</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_2_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="ingredient_accordion_header2" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form2"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header3">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3" id="accordion_3">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/vegetables.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Vegetables</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_3_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse3" class="collapse" aria-labelledby="ingredient_accordion_header3" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form3"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header4">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4" id="accordion_4">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/meat.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Meat</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_4_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse4" class="collapse" aria-labelledby="ingredient_accordion_header4" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form4"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header5">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5" id="accordion_5">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/fruits.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Fruits</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_5_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse5" class="collapse" aria-labelledby="ingredient_accordion_header5" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form5"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header6">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse6" aria-expanded="false" aria-controls="collapse6" id="accordion_6">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/condiments.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Condiments</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_6_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse6" class="collapse" aria-labelledby="ingredient_accordion_header6" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form6"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header7">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7" id="accordion_7">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/liquor.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Liquor</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_7_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse7" class="collapse" aria-labelledby="ingredient_accordion_header7" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form7"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header8">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse8" aria-expanded="false" aria-controls="collapse8" id="accordion_8">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/deserts%20and%20snacks.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Deserts and snacks</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_8_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse8" class="collapse" aria-labelledby="ingredient_accordion_header8" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form8"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header9">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse9" aria-expanded="false" aria-controls="collapse9" id="accordion_9">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/beverages.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Beverages</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_9_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse9" class="collapse" aria-labelledby="ingredient_accordion_header9" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form9"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header10">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse10" aria-expanded="false" aria-controls="collapse10" id="accordion_10">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/added%20sweetners.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Add sweetners</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_10_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse10" class="collapse" aria-labelledby="ingredient_accordion_header10" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form10"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header11">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse11" aria-expanded="false" aria-controls="collapse11" id="accordion_11">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/nuts.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Nuts</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_11_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse11" class="collapse" aria-labelledby="ingredient_accordion_header11" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form11"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header12">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse12" aria-expanded="false" aria-controls="collapse12" id="accordion_12">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/seafood.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Fish and seafood</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_12_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse12" class="collapse" aria-labelledby="ingredient_accordion_header12" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form12"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header13">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse13" aria-expanded="false" aria-controls="collapse13" id="accordion_13">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/oils.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Oils</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_13_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse13" class="collapse" aria-labelledby="ingredient_accordion_header13" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form13"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header14">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse14" aria-expanded="false" aria-controls="collapse14" id="accordion_14">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/legumes.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Legumes</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_14_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse14" class="collapse" aria-labelledby="ingredient_accordion_header14" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form14"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header15">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse15" aria-expanded="false" aria-controls="collapse15" id="accordion_15">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/soup.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Soup</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_15_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse15" class="collapse" aria-labelledby="ingredient_accordion_header15" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form15"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="" id="ingredient_accordion_header16">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapse16" aria-expanded="false" aria-controls="collapse16" id="accordion_16">
+                                <a class="float-left mr-3 my-0 ml-0">
+                                    <img src="../../Static/img/IngredientTypes/garnish.jpg" width="62" height="62">
+                                </a>
+                                <a class="h6 float-left ml-3 mt-3">Garnish</a>
+                                <a role="button" class="float-right mt-3">
+                                    <img src="../../Static/icon/plus-patch.svg" alt="" width="25" height="25" id = "accordion_16_img">
+                                </a>
+                            </button>
+
+                        </h2>
+                    </div>
+                    <div id="collapse16" class="collapse" aria-labelledby="ingredient_accordion_header16" data-parent="#ingredients_selector_accordion">
+                        <div class="card-body">
+                            <form class="ingredients_form" id="ingredients_form16"></form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <br>
+            <br>
+            <br>
+        </div>
+
+        <!-----------------------------------------  Filter and recipe list ----------------------------------------->
+        <div class="col-md-6 border text-center">
+
+            <!-----------------------------------------  clear all filter button ----------------------------------------->
+            <a class="btn btn-sm btn-light float-right mt-2" onclick="filter_clear()">Clear all filter</a>
+            <p></p>
+
+
+            <!-----------------------------------------  filter collapse ----------------------------------------->
+            <a class="btn btn-outline-warning" data-toggle="collapse" href="#meal_type_collapse" role="button" aria-expanded="false" aria-controls="meal_type_collapse" onclick="change_collapse_botton_icon(this)">Meal type</a>
+            <a class="btn btn-outline-warning" data-toggle="collapse" href="#cuisine_collapse" role="button" aria-expanded="false" aria-controls="cuisine_collapse" onclick="change_collapse_botton_icon(this)">Cuisine</a>
+            <a class="btn btn-warning" data-toggle="collapse" href="#preference_collapse" role="button" aria-expanded="false" aria-controls="preference_collapse" onclick="change_collapse_botton_icon(this)">Preference</a>
+
+            <!-----------------------------------------  meal type filter ----------------------------------------->
+                <div class="col mt-2">
+                    <div class="collapse multi-collapse" id="meal_type_collapse">
+                        <div class="border card-body">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="filter4" value="option1" {{f4_check}} onclick="filter_check(this)">
+                                <label class="form-check-label" for="filter4">Appetizers & Snacks</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="filter5" value="option1" {{f5_check}} onclick="filter_check(this)">
+                                <label class="form-check-label" for="filter5">Breakfast & Brunch</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="filter6" value="option1" {{f6_check}} onclick="filter_check(this)">
+                                <label class="form-check-label" for="filter6">Lunch</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="filter7" value="option1" {{f7_check}} onclick="filter_check(this)">
+                                <label class="form-check-label" for="filter7">Desserts</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="filter8" value="option1" {{f8_check}} onclick="filter_check(this)">
+                                <label class="form-check-label" for="filter8">Dinner</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="filter9" value="option1" {{f9_check}} onclick="filter_check(this)">
+                                <label class="form-check-label" for="filter9">Drinks</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-----------------------------------------  cuisine filter ----------------------------------------->
+                    <div class="collapse multi-collapse" id="cuisine_collapse">
+                        <div class="border card-body row">
+                            <div class="col-md-2 h6">Asia
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter10" value="option1" {{f10_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter10">Chinese</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter11" value="option1" {{f11_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter11">Indian</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter12" value="option1" {{f12_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter12">Japanese</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter13" value="option1" {{f13_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter13">Thai</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter14" value="option1" {{f14_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter14">Turkish</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter15" value="option1" {{f15_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter15">Vietnamese</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 h6 mx-1">Africa
+                                <div class="form-check form-check">
+                                    <input class="form-check-input" type="checkbox" id="filter16" value="option1" {{f16_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter16">Moroccan</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-2 h6 float-left mr-2">Europe
+
+
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter22" value="option1" {{f22_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter22">Mediterranean</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter17" value="option1" {{f17_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter17">British</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter18" value="option1" {{f18_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter18">French</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter19" value="option1" {{f19_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter19">Greek</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter20" value="option1" {{f20_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter20">German</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter21" value="option1" {{f21_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter21">Italian</label>
+                                </div>
+
+
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter23" value="option1" {{f23_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter23">Spanish</label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-3 h6 ml-5">North America
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter24" value="option1" {{f24_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter24">American</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter25" value="option1" {{f25_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter25">Mexican</label>
+                                </div>
+                                <div class="form-check form-check float-left">
+                                    <input class="form-check-input" type="checkbox" id="filter26" value="option1" {{f26_check}} onclick="filter_check(this)">
+                                    <label class="form-check-label" for="filter26">Caribbean</label>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+            </div>
+
+            <!-----------------------------------------  preference filter ----------------------------------------->
+            <div class="col">
+                <div class="collapse multi-collapse show" id="preference_collapse">
+                    <div class="border card-body">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter27" value="option1" {{f27_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter27">Healthy</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter28" value="option1" {{f28_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter28">Low-Calorie</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter29" value="option1" {{f29_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter29">Vegetarian</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter30" value="option1" {{f30_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter30">Low-Carb</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter31" value="option1" {{f31_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter31">High-protein</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter32" value="option1" {{f32_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter32">Sugar-Free</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter33" value="option1" {{f33_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter33">Gluten-Free</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter34" value="option1" {{f34_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter34">Hot & Spicy</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter35" value="option1" {{f35_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter35">Stir-Fry</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter36" value="option1" {{f36_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter36">Sweet Tooth</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter37" value="option1" {{f37_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter37">Seafood Lover</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter1" value="option1" {{f1_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter1">Latest</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter2" value="option1" {{f2_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter2">Popular</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="filter3" value="option1" {{f3_check}} onclick="filter_check(this)">
+                            <label class="form-check-label" for="filter3">Quick & Easy</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <!-----------------------------------------  recipe list ----------------------------------------->
+            <ul class="list-group pagination justify-content-center" id="recipe_list"></ul>
+        </div>
+
+
+        <!-----------------------------------------  collected ingredient list ----------------------------------------->
+        <div class="col-md-3 border text-center float-right"><a class="text-black-50">Collected ingredient</a>
+
+            <!-----------------------------------------  clear all ingredients button ----------------------------------------->
+            <a class="btn btn-sm btn-light float-right mt-2" id="ingredient_list_clear" onclick="ingredient_list_clear()">Clear all</a>
+
+            <!----------------------------------------- add ingredient input form ----------------------------------------->
+            <div class=" form-row mt-3">
+                <div class="col-md">
+                    <label for="input_ingredient"></label>
+                    <input type="text" class="form-control" id="input_ingredient" placeholder="Add ingredient by name">
+
+                    <div class="invalid-feedback" id="input_ingredient_feedback">
+
+                    </div>
+                </div>
+            </div>
+
+            <!----------------------------------------- add ingredient input button ----------------------------------------->
+            <a type="button" class="col-md btn btn-sm btn-warning " onclick="input_ingredient()">Add</a>
+            <ul class="list-group" id="collected_list">
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<!-----------------------------------------  Sign variable for backend transfer data ----------------------------------------->
+<div class="d-none" id="recipe_json">{{string}}</div>
+<div class="d-none" id="filter_json">{{filter}}</div>
+
+
+
+
+<!-- JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- bootstrap.bundle.js include fpopper.js-->
+<script src="../../Static/js/jquery-3.5.1.min.js" ></script>
+<script src="../../Static/js/bootstrap.bundle.js" ></script>
+
+</body>
+</html>
+<script>
+    // Add event listener
+    let signin_button = document.getElementById("signin_button");
+    signin_button.addEventListener("click",sign_in);
+    let publish_button = document.getElementById("publish_button");
+    publish_button.addEventListener("click",publish);
+    let search_button = document.getElementById("button-addon2");
+    search_button.addEventListener("click",search);
+    let user_icon = document.getElementById("user_icon");
+    let publish_alert = document.getElementById("publish_alert");
+
+    // call function for get ingredients recommendation list
+    get_recommend();
+
+    // call function for get collected ingredient list
+    get_collected_ingredient_list();
+
+    // call function for get recipe list
+    read_recipe_list();
+
+    // Sign in function
+    // Send sign in form value to /login use POST method
+    // If success refresh this page
+    // If email or password wrong, alert an error message
+    // If request error occur, show error message in console.
+    function sign_in() {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let remember = document.getElementById("dropdownCheck").checked;
+        $.ajax({
+            url: "/login",
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                "email": email,
+                "password": password,
+                "remember": remember
+            },
+            success: function (response) {
+                if (response.res == true)  {
+                    window.location.href="/";
+                }
+                else{
+                    alert('Invalid email or password.');
+                    document.getElementById("sign_in_form").reset();
+                }
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // If user already login in, change the corresponding alert below search bar.
+    function publish() {
+        if ({{ login }})
+        {
+            window.location.href="/publish";
+        }
+    else {
+            publish_alert.className = "alert alert-warning alert-dismissible fade show text-center";
+            user_icon.click();
+        }
+    }
+
+    // If user already login, add user icon drop down list(include profile and logout button).
+    // Also, display an alert to show "Welcome back".
+    // If not login, hide dropdown list.
+    if ({{ login }}){
+        sign_in_success_alert();
+        user_icon_dropdown();
+    } else{
+        publish_alert.className = "alert alert-warning alert-dismissible fade show text-center d-none";
+        login_form();
+    }
+    function sign_in_success_alert() {
+        let success_alert = document.getElementById("homepage_login_success_alert");
+        success_alert.className = "alert alert-warning alert-dismissible fade show";
+
+        success_alert.innerHTML = "<p class='text-center'><strong>Welcome Back {{ user }}!</strong></p>" +
+            "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">"+
+            "<span aria-hidden=\"true\">&times;</span></button>";
+    }
+
+    // set usre icon dropdown list
+    function user_icon_dropdown() {
+        let user_icon = document.getElementById("user_icon");
+        user_icon.dataset.toggle = "dropdown";
+        user_icon.setAttribute("aria-haspopup","true");
+        user_icon.setAttribute("aria-expanded","false");
+        let user_icon_dropdown = document.getElementById("user_icon_dropdown");
+        user_icon_dropdown.innerHTML+="<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuButton\">" +
+            "<a class=\"dropdown-item\" href=\"/profile\">Profile</a>" +
+            "<a class=\"dropdown-item\" href=\"/logout\">Logout</a>"+
+            " </div>";
+    }
+
+    // show login modal form
+    function login_form() {
+        let user_icon = document.getElementById("user_icon");
+        user_icon.dataset.target = "#exampleModal";
+        user_icon.dataset.toggle = "modal";
+    }
+
+
+    // read ingredients and change ingredients checkbox status
+    let recipe_list = document.getElementById("recipe_list");
+    for (var i = 1; i < 17; i++){
+        get_ingredients(i);
+        change_collapse_icon(i);
+    }
+
+
+    // get recipe list form /search/recipes use GET method, with filter and recipe data
+    function read_recipe_list() {
+        let recipe_json = document.getElementById("recipe_json").innerText;
+        let filter_json = document.getElementById("filter_json").innerText;
+        $.ajax({
+            url: '/search/recipes',
+            type: 'GET',
+            dataType: "JSON",
+            data: {
+                "string": recipe_json,
+                "filter": filter_json
+            },
+            success: function (response){
+                // if success, append card into recipe list element
+                recipe_list.innerHTML ="";
+                var len = 0;
+                for(k in response) {
+                    len++;
+
+                    // if response length smaller than 12, do not add 'show more' collapse, vice versa
+                    if(len < 12){
+                        if (!response[k]["like"]){
+                        recipe_list.innerHTML += "<div class=\"card mb-3\">" +
+
+                            "<div class=\"row no-gutters\">" +
+
+                            "<div class=\"col-md-4\">" +
+
+                            "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"> </div>" +
+                            "<div class=\"col-md-8\">" +
+                            "<div class=\"card-body\">" +
+                            "<a role=\"button\" data_id=\""+response[k]["id"]+"\" onclick='favorite_click_listener(this)' class='float-right'> \n" +
+                            "                <img src=\"../../Static/icon/star.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">\n" +
+                            "            </a>"+
+                            "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated "+response[k]["time"]+" ago</small></p>" +
+
+                            "</div></div></div></div>";
+                        }else{
+                            recipe_list.innerHTML += "<div class=\"card mb-3\">" +
+
+                                "<div class=\"row no-gutters\">" +
+
+                                "<div class=\"col-md-4\">" +
+
+                                "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"> </div>" +
+                                "<div class=\"col-md-8\">" +
+                                "<div class=\"card-body\">" +
+                                "<a role=\"button\" data_id=\""+response[k]["id"]+"\" onclick='favorite_click_listener(this)' class='float-right'> \n" +
+                                "                <img src=\"../../Static/icon/star-fill.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">\n" +
+                                "            </a>"+
+                                "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+
+                                "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                                "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated "+response[k]["time"]+" ago</small></p>" +
+
+                                "</div></div></div></div>";
+                        }
+                    }else {
+                        if (len == 12){
+                        recipe_list.innerHTML+="<a class=\"btn btn-light\" data-toggle=\"collapse\" href=\"#recipe_collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"recipe_collapse\">\n" +
+                            "    Show more\n" +
+                            "  </a>";
+                        }
+
+                        let collapse_div = document.createElement("div");
+                        collapse_div.className = "collapse";
+                        collapse_div.id = "recipe_collapse";
+
+                        if (!response[k]["like"]){
+                            collapse_div.innerHTML += "<div class=\"card mb-3\">" +
+
+                                "<div class=\"row no-gutters\">" +
+
+                                "<div class=\"col-md-4\">" +
+
+                                "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"> </div>" +
+                                "<div class=\"col-md-8\">" +
+                                "<div class=\"card-body\">" +
+                                "<a role=\"button\" data_id=\""+response[k]["id"]+"\" onclick='favorite_click_listener(this)' class='float-right'> \n" +
+                                "                <img src=\"../../Static/icon/star.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">\n" +
+                                "            </a>"+
+                                "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+
+                                "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                                "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated "+response[k]["time"]+" ago</small></p>" +
+
+                                "</div></div></div></div>";
+                        }else{
+                            collapse_div.innerHTML += "<div class=\"card mb-3\">" +
+
+                                "<div class=\"row no-gutters\">" +
+
+                                "<div class=\"col-md-4\">" +
+
+                                "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"> </div>" +
+                                "<div class=\"col-md-8\">" +
+                                "<div class=\"card-body\">" +
+                                "<a role=\"button\" data_id=\""+response[k]["id"]+"\" onclick='favorite_click_listener(this)' class='float-right'> \n" +
+                                "                <img src=\"../../Static/icon/star-fill.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">\n" +
+                                "            </a>"+
+                                "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+
+                                "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                                "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated "+response[k]["time"]+" ago</small></p>" +
+
+                                "</div></div></div></div>";
+                        }
+                        recipe_list.appendChild(collapse_div);
+
+
+                    }
+
+                }
+            },
+            error: function () {
+                console.error("error:", error);
+            }})
+
+    }
+
+
+    // if user already login, when user click star button, check the star status
+    // if star is filled(yellow color), that means user want to delete favorite for this dish, so we call delete favorite function.
+    // else means star not filled (white color), that means user want to add favorite for this dish, so we call add favorite function.
+    // if user not login, display an alert, and show the sign in form.
+    function favorite_click_listener(obj) {
+        if(obj.innerHTML.includes("star-fill")){
+            delete_favorite(obj);
+        }else{
+            add_favorite(obj);
+        }
+    }
+
+    // send dish id to /favorite with POST method, if success, change the star button color
+    function add_favorite(obj) {
+        let id = obj.attributes.data_id.value;
+        $.ajax({
+            url: '/favorite',
+            type: 'POST',
+            dataType: "JSON",
+            data: {
+                "id": id,
+            },
+            success: function (response) {
+                obj.innerHTML = "<img src=\"../../Static/icon/star-fill.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">";
+            },
+            error: function () {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // send dish id to /favorite with DELETE method, if success, change the star button color
+    function delete_favorite(obj) {
+        let id = obj.attributes.data_id.value;
+        $.ajax({
+            url: '/favorite',
+            type: 'DELETE',
+            dataType: "JSON",
+            data: {
+                "id": id,
+            },
+            success: function (response) {
+                obj.innerHTML = "<img src=\"../../Static/icon/star.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">";
+            },
+            error: function () {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    function get_ingredients(i) {
+        try {
+            let ingredients_form = document.getElementById("ingredients_form" + i);
+            $.ajax({
+                url: '/search/ing_type',
+                type: 'GET',
+                dataType: "JSON",
+                data: {
+                    "ing_type_id": i,
+                },
+                success: function (response) {
+                    for (k in response) {
+                        ingredients_form.innerHTML += "<div class=\"form-group form-check-inline\">\n" +
+                            "                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"ingredient" + response[k]["id"] + "\" onclick='ingredient_check_listener(this)'>\n" +
+                            "                                    <label class=\"form-check-label\" for=\"form1_check1\">" + response[k]["ingredient"] + "</label>\n" +
+                            "                                </div>";
+                        let check = document.getElementById("ingredient"+response[k]["id"]);
+                        if (response[k]["check"] == 'true'){
+                            check.checked = true;
+                        }else {
+                            check.checked = false;
+                        }
+                    }
+
+                },
+                error: function () {
+                    console.error("error:", error);
+                }
+            })
+        }catch (e) {
+
+        }
+    }
+
+    function change_collapse_icon(i) {
+        let collapse_button = document.getElementById("accordion_"+i);
+        collapse_button.addEventListener("click",
+            function () {
+                for(j=1; j<17;j++){
+                    let collapse_content = document.getElementById("collapse"+j);
+                    let collapse_icon = document.getElementById("accordion_"+j+"_img");
+                    if (!collapse_content.className.includes("show") && j==i){
+                        collapse_icon.src = "../../Static/icon/minus-patch.svg";
+                    }else {
+                        let collapse_icon = document.getElementById("accordion_"+j+"_img");
+                        collapse_icon.src = "../../Static/icon/plus-patch.svg";
+                    }
+                }
+            })
+
+    }
+
+    function ingredient_check_listener(obj) {
+        if (obj.checked){
+            ing_add(obj.id);
+        }else {
+            ing_delete(obj.id);
+        }
+
+
+    }
+
+    function ing_add(id) {
+        $.ajax({
+            url: '/running_list',
+            type: 'POST',
+            dataType: "JSON",
+            data: {
+                "id": id,
+            },
+            success: function (response){
+                try {
+                    let check = document.getElementById("ingredient" + id);
+                    check.checked = true;
+                }catch (e) {
+
+                }
+                get_recommend();
+                get_collected_ingredient_list();
+                read_recipe_list();
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }})
+    }
+
+    function ing_delete(id) {
+        $.ajax({
+            url: '/running_list',
+            type: 'DELETE',
+            dataType: "JSON",
+            data: {
+                "id": id,
+            },
+            success: function (response){
+                get_recommend();
+                get_collected_ingredient_list();
+                read_recipe_list();
+                try {
+                    let check = document.getElementById("ingredient" + id);
+                    check.checked = false;
+                }catch (e) {
+
+                }
+            },
+            error: function () {
+                console.error("error:", error);
+            }})
+    }
+
+    function get_recommend() {
+        let recommend = document.getElementById("recommend_list");
+        $.ajax({
+            url: '/recommend/ing_to_list',
+            type: 'GET',
+            dataType: "JSON",
+            data: {
+                "string": document.getElementById("recipe_json").innerText,
+            },
+            success: function (response){
+                recommend.innerHTML = "<li class=\"nav-item\">\n" +
+                    "                    <a class=\"h6 nav-link disabled\" href=\"#\" tabindex=\"-1\" aria-disabled=\"true\">Do you have:</a>\n" +
+                    "                </li>";
+                for (k in response){
+                    recommend.innerHTML += "<div class=\"form-check form-check-inline\">\n" +
+                        "                    <input class=\"form-check-input\" type=\"checkbox\" id=\""+response[k]["id"]+"\"value=\"option1\" onclick='ingredient_check_listener(this)'>\n" +
+                        "                    <label class=\"form-check-label\" for=\""+response[k]["id"]+"\">"+response[k]["ingredient"] +"</label>\n" +
+                        "                </div>";
+                }
+            },
+            error: function () {
+                console.error("error:", error);
+            }})
+    }
+
+    function get_collected_ingredient_list() {
+        let collected_list = document.getElementById("collected_list");
+        $.ajax({
+            url: '/running_list',
+            type: 'GET',
+            dataType: "JSON",
+            success: function (response){
+                collected_list.innerHTML = "";
+                for(k in response){
+                    collected_list.innerHTML += "   <li class=\"list-group-item d-flex justify-content-between align-items-center\">\n" +
+                        "" + response[k]["name"] +
+                        "        <button class=\"border-0 badge badge-danger badge-pill\" onclick=\"ing_delete(this.id)\" id = \""+response[k]["id"]+"\">Delete</button>\n" +
+                        "            </li>";
+                }
+            },
+            error: function () {
+                console.error("error:", error);
+            }})
+
+
+
+    }
+
+    function search(){
+        let search_value = document.getElementById("search_info").value;
+        let recipe_json = document.getElementById("recipe_json");
+        recipe_json.innerText = search_value;
+        read_recipe_list();
+        get_recommend();
+    }
+
+    function add_filter(obj) {
+        let filter_s = document.getElementById("filter_json");
+        filter_s.innerText+= ","+obj
+        $.ajax({
+            url: '/filter',
+            type: 'POST',
+            dataType: "JSON",
+            data:{
+                "id": obj.id
+            },
+            success: function (response){
+
+                read_recipe_list();
+            },
+            error: function () {
+                console.error("error:");
+            }})
+    }
+
+    function change_collapse_botton_icon(obj) {
+        if(obj.className.includes("outline")){
+            obj.className = "btn btn-warning";
+        }else {
+            obj.className = "btn btn-outline-warning";
+
+        }
+    }
+
+    function filter_clear() {
+        $.ajax({
+            url: '/search/clear',
+            type: 'DELETE',
+            dataType: "JSON",
+            success: function (response){
+                window.location.reload();
+            },
+            error: function () {
+                console.error("error:");
+            }})
+    }
+
+    function ingredient_list_clear() {
+        $.ajax({
+            url: '/running_list/clear',
+            type: 'DELETE',
+            dataType: "JSON",
+            success: function (response){
+                for (k in response) {
+                    let check = document.getElementById("ingredient"+response[k]);
+                    check.checked = false;
+                    }
+                document.getElementById("recipe_json").innerText = "";
+                document.getElementById("search_info").value = "";
+                get_collected_ingredient_list();
+                read_recipe_list();
+                get_recommend();
+            },
+            error: function () {
+                console.error("error:");
+            }})
+    }
+
+    function filter_check(obj) {
+        let id = obj.id;
+        if (obj.checked){
+            $.ajax({
+                url: '/search/filters',
+                type: 'POST',
+                dataType: "JSON",
+                data:{
+                    "id": id
+                },
+                success: function (response){
+                    obj.checked= true;
+                    read_recipe_list();
+                },
+                error: function () {
+                    console.error("error:");
+                }})
+        }else {
+            $.ajax({
+                url: '/search/filters',
+                type: 'DELETE',
+                dataType: "JSON",
+                data:{
+                    "id": id
+                },
+                success: function (response){
+                    obj.checked=false;
+                    read_recipe_list();
+                },
+                error: function () {
+                    console.error("error:");
+                }})
+        }
+    }
+
+    function input_ingredient() {
+        let feedback = document.getElementById("input_ingredient_feedback");
+        let input_ingredient = document.getElementById("input_ingredient");
+
+        $.ajax({
+            url: '/running_list/add',
+            type: 'POST',
+            dataType: "JSON",
+            data:{
+                "ing_string": input_ingredient.value
+            },
+            success: function (response){
+                for(k in response){
+                    let ing_box = document.getElementById("ingredient" + response[k]["id"]);
+                    ing_box.checked = true;
+                }
+                read_recipe_list();
+                get_collected_ingredient_list();
+            },
+            error: function (error) {
+                feedback.innerText = error;
+                input_ingredient.className = "form-control is-invalid";
+            }})
+        
+    }
+</script>
+
+<script>
+    $('#search_info').bind('keyup', function(event) {
+        if (event.keyCode == "13") {
+            $('#button-addon2').click();
+        }
+    });
+</script>

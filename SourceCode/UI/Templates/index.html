@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="ZH">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../Static/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="../../Static/css/all.min.css">
+    <title>Meal Match</title>
+
+
+</head>
+
+
+<body>
+
+<!-----------------------------------------  NavBar ----------------------------------------->
+
+<nav class="navbar navbar-expand-lg navbar-light" >
+
+    <a class="navbar-brand" href="/">Meal Match</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home </a>
+            </li>
+            <!-----------------------------------------  Meal type dropdown list ----------------------------------------->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Meal Type
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/search?filter=4&string=">Appetizers & Snacks</a>
+                    <a class="dropdown-item" href="/search?filter=5&string=">Breakfast & Brunch</a>
+                    <a class="dropdown-item" href="/search?filter=6&string=">Lunch</a>
+                    <a class="dropdown-item" href="/search?filter=7&string=">Desserts</a>
+                    <a class="dropdown-item" href="/search?filter=8&string=">Dinner</a>
+                    <a class="dropdown-item" href="/search?filter=9&string=">Drinks</a>
+                </div>
+            </li>
+
+        </ul>
+
+        <!-----------------------------------------  Share recipe button ----------------------------------------->
+        <button type="button" class="btn btn-warning px-3 mx-3" id = "publish_button">Share My Recipe</button>
+
+        <!-----------------------------------------  User icon ----------------------------------------->
+        <div class="nav-item px-1 mx-2" id="user_icon_dropdown">
+            <a role="button" id="user_icon">
+                <img src="../../Static/icon/person-circle.svg" alt="" width="32" height="32" title="User">
+            </a>
+
+        </div>
+
+        <!-----------------------------------------  Sign in form modal ----------------------------------------->
+        <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
+            <div class="alert alert-warning alert-dismissible fade show text-center d-none" role="alert" id = "publish_alert">
+                <strong>Please sign in first</strong>.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="signinModalLabel">Sign in</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <form class="px-4 py-3 border" id="sign_in_form">
+
+                                <!-----------------------------------------  Email and user name input form ----------------------------------------->
+                                <div class="form-group">
+                                    <label for="email"><i class="far fa-envelope mx-1"></i> Email address / <i class="far fa-user mx-1"></i>Username</label>
+                                    <input type="email" class="form-control" id="email" placeholder="email@mealmatch.com" required>
+                                    <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+
+                                <!-----------------------------------------  Password input form ----------------------------------------->
+                                <div class="form-group">
+                                    <label for="password"><i class="fas fa-key mx-1"></i> Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                </div>
+
+                                <!----------------------------------------- Remember me check box ----------------------------------------->
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="dropdownCheck">
+                                            <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                                                Remember me
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-----------------------------------------  Sign in button ----------------------------------------->
+                                <button type="button" class="btn btn-warning" id = "signin_button">Sign in</button>
+                            </form>
+                            <div class="dropdown-divider border-warning"></div>
+                        <!-----------------------------------------  sign up link ----------------------------------------->
+                            <a class="dropdown-item" href="/signup">New around here? Sign up</a>
+
+                        <!-----------------------------------------  Reset password link ----------------------------------------->
+                            <a class="dropdown-item" href="/forgot_pw">Forgot password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+
+<!-----------------------------------------  Search bar ----------------------------------------->
+<div id="homepage_search_form" class="junbotron jumbotron-fluid">
+    <div class="container">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="input-group mb-3 border-light">
+            <input type="text" class="form-control" placeholder="Search ingredients or dishes, using ', '  split each ingredients" aria-label="ingredients or dish" aria-describedby="button-addon2" id="search_info">
+            <div class="input-group-append">
+                <button class="btn btn-light border-light" type="button" id="button-addon2" >Search</button>
+            </div>
+
+        </div>
+        <br>
+        <br>
+        <br>
+
+    </div>
+</div>
+<!-----------------------------------------  Search bar style customise ----------------------------------------->
+<style>
+    #homepage_search_form{
+        background: url("../../Static/img/img1.jpg")  no-repeat;
+        background-position: center;
+    }
+</style>
+
+<!-----------------------------------------  Login success alert ----------------------------------------->
+<div class="" role="alert" id = "homepage_login_success_alert"></div>
+
+<!-----------------------------------------  Ingredients challenge notice ----------------------------------------->
+<div id="homepage_recipe_info" class="junbotron jumbotron-fluid bg-light">
+    <div class="container">
+        <br>
+
+        <div class="container">
+            <h1 class="display-5">The INGREDIENTS Challenge</h1>
+            <p class="lead"> Can’t find recipes with the ingredients you checked? You can create your own!</p>
+            <p class="lead"> These ingredients don't have recipe yet.</p>
+            <ul>
+                <li id="requirement1"></li>
+                <li id="requirement2"></li>
+                <li id="requirement3"></li>
+            </ul>
+            <a  class="btn btn-warning" onclick="publish()">Share your recipe now!</a>
+        </div>
+        <br>
+    </div>
+</div>
+
+<!-----------------------------------------  homepage_recipe_info style customise ----------------------------------------->
+<style>
+    #homepage_recipe_info{
+        background: url("../../Static/img/HomePage/challenge.jpg")  no-repeat;
+        background-position: center;
+        background-size: 1900px 1100px;
+    }
+</style>
+
+</div>
+
+<br>
+<br>
+<br>
+<br>
+
+<!-----------------------------------------  Card display part ----------------------------------------->
+
+<div id="homepage_card" class="container">
+
+    <!----------------------------------------- The latest post recipes ----------------------------------------->
+    <ul class="nav">
+        <li class="nav-item mr-auto">
+            <p class="nav-link active h4 text-warning" href="/search?type=newest">The Latest</p>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-warning border-bottom" href="/search?filter=1&string=">View more</a>
+        </li>
+    </ul>
+
+    <div class="card-deck">
+
+        <div class="card" >
+            <img src="{{card1_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card1_id}}','_blank')" height="180">
+            <div class="card-body">
+                <a role="button"  id ="{{ card1_id }}" onclick='favorite_click_listener(this)' class='float-right'>
+                    <img src="../../Static/icon/{{ card1_icon }}" width="25" height="25" ></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card1_id}}','_blank')">{{card1_title}}</h5>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card1_id}}','_blank')">{{ card1_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card1_id}}','_blank')"><small class="text-muted">Last updated {{ card1_time }} ago</small></p>
+            </div>
+        </div>
+
+        <div class="card" >
+            <img src="{{card2_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card2_id}}','_blank')" height="180">
+            <div class="card-body">
+                <a role="button"  id = "{{ card2_id }}" onclick='favorite_click_listener(this)' class='float-right'>
+                    <img src="../../Static/icon/{{ card2_icon }}" width="25" height="25"></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card2_id}}','_blank')">{{card2_title}}</h5>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card2_id}}','_blank')">{{ card2_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card2_id}}','_blank')"><small class="text-muted">Last updated {{ card2_time }} ago</small></p>
+            </div>
+        </div>
+
+        <div class="card" >
+            <img src="{{card3_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card3_id}}','_blank')" height="180">
+            <div class="card-body">
+                <a role="button"  id ="{{ card3_id }}" onclick='favorite_click_listener(this)' class='float-right'>
+                    <img src="../../Static/icon/{{ card3_icon }}" width="25" height="25"></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card3_id}}','_blank')">{{card3_title}}</h5>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card3_id}}','_blank')">{{ card3_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card3_id}}','_blank')"><small class="text-muted">Last updated {{ card3_time }} ago</small></p>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <!----------------------------------------- The most popular recipes ----------------------------------------->
+    <ul class="nav">
+        <li class="nav-item mr-auto">
+            <p class="nav-link active h4 text-warning" href="/search?type=pop">The most popular</p>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-warning border-bottom" href="/search?filter=2&string=">View more</a>
+        </li>
+    </ul>
+
+    <div class="card-deck">
+        <div class="card" >
+            <img src="{{card4_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card4_id}}','_blank')">
+            <div class="card-body">
+                <a role="button"  id ="{{ card4_id }}" onclick='favorite_click_listener(this)' class='float-right' height="180">
+                    <img src="../../Static/icon/{{ card4_icon }}" width="25" height="25" id ="star_icon"></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card4_id}}','_blank')">{{card4_title}}</h5>
+
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card4_id}}','_blank')">{{ card4_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card4_id}}','_blank')"><small class="text-muted">Last updated {{ card4_time }} ago</small></p>
+            </div>
+        </div>
+
+        <div class="card" >
+            <img src="{{card5_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card5_id}}','_blank')">
+            <div class="card-body">
+                <a role="button"  id ="{{ card5_id }}" onclick='favorite_click_listener(this)' class='float-right' height="180">
+                    <img src="../../Static/icon/{{ card5_icon }}" width="25" height="25"></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card5_id}}','_blank')">{{card5_title}}</h5>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card5_id}}','_blank')">{{ card5_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card5_id}}','_blank')"><small class="text-muted">Last updated {{ card5_time }} ago</small></p>
+            </div>
+        </div>
+
+        <div class="card" >
+            <img src="{{card6_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card6_id}}','_blank')">
+            <div class="card-body">
+                <a role="button"  id ="{{ card6_id }}" onclick='favorite_click_listener(this)' class='float-right' height="180">
+                    <img src="../../Static/icon/{{ card6_icon }}" width="25" height="25"></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card6_id}}','_blank')">{{card6_title}}</h5>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card6_id}}','_blank')">{{ card6_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card6_id}}','_blank')"><small class="text-muted">Last updated {{ card6_time }} ago</small></p>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+
+    <ul class="nav">
+        <li class="nav-item mr-auto">
+            <p class="nav-link active h4 text-warning" href="/search?type=quick">Quick And Easy</p>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-warning border-bottom" href="/search?filter=3&string=">View more</a>
+        </li>
+    </ul>
+
+    <div class="card-deck">
+
+        <div class="card" >
+            <img src="{{card7_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card7_id}}','_blank')">
+            <div class="card-body">
+                <a role="button"  id ="{{ card7_id }}" onclick='favorite_click_listener(this)' class='float-right' height="180">
+                    <img src="../../Static/icon/{{ card7_icon }}" width="25" height="25"></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card7_id}}','_blank')">{{card7_title}}</h5>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card7_id}}','_blank')">{{ card7_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card7_id}}','_blank')"><small class="text-muted">Last updated {{ card7_time }} ago</small></p>
+            </div>
+        </div>
+
+        <div class="card" >
+            <img src="{{card8_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card8_id}}','_blank')">
+            <div class="card-body">
+                <a role="button"  id ="{{ card8_id }}" onclick='favorite_click_listener(this)' class='float-right' height="180">
+                    <img src="../../Static/icon/{{ card8_icon }}" width="25" height="25"></a>
+                <h5 class="card-title" onclick="javascript:window.open('/recipe/{{card8_id}}','_blank')">{{card8_title}}</h5>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card8_id}}','_blank')">{{ card8_text }}</p>
+                <p class="card-text" onclick="javascript:window.open('/recipe/{{card8_id}}','_blank')"><small class="text-muted">Last updated {{ card8_time }} ago</small></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="{{card9_img}}" class="card-img-top" alt="..." onclick="javascript:window.open('/recipe/{{card9_id}}','_blank')">
+            <div class="card-body">
+                <a role="button"  id ="{{ card9_id }}" onclick='favorite_click_listener(this)' class='float-right' height="180">
+                    <img src="../../Static/icon/{{ card9_icon }}" width="25" height="25"></a>
+                <h5 class="card-title"  onclick="javascript:window.open('/recipe/{{card9_id}}','_blank')">{{card9_title}}</h5>
+                <p class="card-text"  onclick="javascript:window.open('/recipe/{{card9_id}}','_blank')">{{ card9_text }}</p>
+                <p class="card-text"  onclick="javascript:window.open('/recipe/{{card9_id}}','_blank')"><small class="text-muted">Last updated {{ card9_time }} ago</small></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+<!-- JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- bootstrap.bundle.js include popper.js-->
+<script src="../../Static/js/jquery-3.5.1.min.js" ></script>
+<script src="../../Static/js/bootstrap.bundle.js" ></script>
+
+<script>
+    // Add event listener
+    let signin_button = document.getElementById("signin_button");
+    signin_button.addEventListener("click",sign_in);
+    let publish_button = document.getElementById("publish_button");
+    publish_button.addEventListener("click",publish);
+    let search_button = document.getElementById("button-addon2");
+    search_button.addEventListener("click",search);
+    let user_icon = document.getElementById("user_icon");
+    let publish_alert = document.getElementById("publish_alert");
+
+    // Get ingredients sets search frequently but not have recipe, show it in ingredient challenge notice.
+    ingredient_requirement();
+
+    // Sign in function
+    // Send sign in form value to /login use POST method
+    // If success refresh this page
+    // If email or password wrong, alert an error message
+    // If request error occur, show error message in console.
+    function sign_in() {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let remember = document.getElementById("dropdownCheck").checked;
+        $.ajax({
+            url: "/login",
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                "email": email,
+                "password": password,
+                "remember": remember
+            },
+            success: function (response) {
+                if (response.res == true)  {
+                    window.location.href="/";
+                }
+                else{
+                    alert('Invalid email or password.');
+                    document.getElementById("sign_in_form").reset();
+                }
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // If user already login in, change the corresponding alert below search bar.
+    function publish() {
+        if ({{ login }})
+        {
+            window.location.href="/publish";
+        }
+        else {
+            publish_alert.className = "alert alert-warning alert-dismissible fade show text-center";
+            user_icon.click();
+        }
+    }
+
+    // If user click search button, send search bar input form value to /recommend/ing_set
+    // then jump to search page follow a get message include search input string.
+    function search() {
+        let search_info = document.getElementById("search_info").value;
+        $.ajax({
+            url: '/recommend/ing_set',
+            type: 'POST',
+            dataType: "JSON",
+            data: {
+                "string": search_info,
+            },
+            success: function (response) {
+                window.location.href="/search?string=" + search_info;
+            },
+            error: function () {
+                console.error("error:", error);
+            }
+        })
+
+    }
+
+    // If user already login, add user icon drop down list(include profile and logout button).
+    // Also, display an alert to show "Welcome back".
+    // If not login, hide dropdown list.
+    // login parameter use Flask to transfer
+    if ({{ login }}){
+        sign_in_success_alert();
+        user_icon_dropdown();
+    } else{
+        publish_alert.className = "alert alert-warning alert-dismissible fade show text-center d-none";
+        login_form();
+    }
+
+    // control sign in alert status
+    // if sign in success, insert HTML code in homepage_login_success_alert element
+    function sign_in_success_alert() {
+        let success_alert = document.getElementById("homepage_login_success_alert");
+        success_alert.className = "alert alert-warning alert-dismissible fade show";
+
+        success_alert.innerHTML = "<p class='text-center'><strong>Welcome Back {{ user }}!</strong></p>" +
+            "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">"+
+            "<span aria-hidden=\"true\">&times;</span></button>";
+    }
+
+    // set user icon dropdown list
+    // if user already sign in, add dropdown list in user icon element.
+    function user_icon_dropdown() {
+        let user_icon = document.getElementById("user_icon");
+        user_icon.dataset.toggle = "dropdown";
+        user_icon.setAttribute("aria-haspopup","true");
+        user_icon.setAttribute("aria-expanded","false");
+        let user_icon_dropdown = document.getElementById("user_icon_dropdown");
+        user_icon_dropdown.innerHTML+="<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuButton\">" +
+            "<a class=\"dropdown-item\" href=\"/profile\">Profile</a>" +
+            "<a class=\"dropdown-item\" href=\"/logout\">Logout</a>"+
+            " </div>";
+    }
+
+    // display login form modal
+    function login_form() {
+        let user_icon = document.getElementById("user_icon");
+        user_icon.dataset.target = "#signinModal";
+        user_icon.dataset.toggle = "modal";
+    }
+
+    // if user already login, when user click star button, check the star status
+    // if star is filled(yellow color), that means user want to delete favorite for this dish, so we call delete favorite function.
+    // else means star not filled (white color), that means user want to add favorite for this dish, so we call add favorite function.
+    // if user not login, display an alert, and show the sign in form.
+    function favorite_click_listener(obj) {
+        if ({{ login }}){
+            if(obj.innerHTML.includes("star-fill")){
+                delete_favorite(obj);
+            }else{
+                add_favorite(obj);
+            }
+        }else{
+            publish_alert.className = "alert alert-warning alert-dismissible fade show text-center";
+            user_icon.click();
+        }
+    }
+
+    // send dish id to /favorite with POST method, if success, change the star button color
+    function add_favorite(obj) {
+        let id = obj.id;
+        $.ajax({
+            url: '/favorite',
+            type: 'POST',
+            dataType: "JSON",
+            data: {
+                "id": id,
+            },
+            success: function (response) {
+                obj.innerHTML = "<img src=\"../../Static/icon/star-fill.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">";
+
+            },
+            error: function () {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // send dish id to /favorite with DELETE method, if success, change the star button color
+    function delete_favorite(obj) {
+        let id = obj.id;
+        $.ajax({
+            url: '/favorite',
+            type: 'DELETE',
+            dataType: "JSON",
+            data: {
+                "id": id,
+            },
+            success: function (response) {
+                obj.innerHTML = "<img src=\"../../Static/icon/star.svg\" alt=\"\" width=\"25\" height=\"25\" id =\"star_icon\">";
+
+            },
+            error: function () {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // get the ingredient challenge part ingredient list
+    // send GET request to /recommend/ing_set
+    // if success, we can get a list of ingredient, set these ingredient in requirements elements
+    function ingredient_requirement(){
+        $.ajax({
+            url: '/recommend/ing_set',
+            type: 'GET',
+            dataType: "JSON",
+            success: function (response) {
+                for(var i = 0; i < response.length; i++){
+                    let requirement = document.getElementById('requirement'+Number(i+1));
+                    requirement.innerText = response[i];
+                }
+            },
+            error: function () {
+                console.error("error:", error);
+            }
+        })
+    }
+
+</script>
+<script>
+    // bind keyboard  event listener to search bar
+    // if user press enter key, the search button will be click.
+    $('#search_info').bind('keyup', function(event) {
+        if (event.keyCode == "13") {
+            $('#button-addon2').click();
+        }
+    });
+</script>
+</body>
+</html>

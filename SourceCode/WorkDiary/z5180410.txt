@@ -1,0 +1,32 @@
+Week 1
+Set up a team and select a team leader.
+Analyze the seven projects, and finally choose the meal match project.
+Analysis of proposal's scoring criteria.
+start to write proposal.
+
+Week 2
+Write strings of proposal.
+Three weekly meetings were held with the team members.
+Learn django web framework
+Dicuss the form and articuture of product.
+
+Week 3
+Meeting with team members
+Write user story in jira and proposal
+Finish the writing of proposal and learn the knowledge of Flask framwork and frount-end
+
+Week 4
+Have a team meeting to align the model of project.
+Design entities like 'recipe'.
+Update some flask-restful code for APIs.
+Update the functions for search model.
+
+Week 5
+Have weekly meeting with team members, discussed the process of project and the content which should be showed on the demo.
+
+Week 6
+Have weekly meeting with team members, discussed the process of project.
+Create a recipe table and classify ingredients in scrapy data by category.
+
+Week 7
+

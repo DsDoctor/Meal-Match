@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ZH">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../Static/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="../../Static/css/all.min.css">
+    <title>Meal Match</title>
+
+</head>
+
+
+<body>
+
+<!-----------------------------------------  NavBar ----------------------------------------->
+<nav class="navbar navbar-expand-lg navbar-light border-bottom" >
+    <a class="navbar-brand" href="/">Meal Match</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<br>
+<br>
+<br>
+<br>
+
+<!-----------------------------------------  Share recipe form ----------------------------------------->
+<div class="container">
+    <form class="px-4 py-3 border">
+        <div class="form-group col-md-7">
+            <!-----------------------------------------  Recipe Name ----------------------------------------->
+            <label for="title" class="h5"><i class="fas fa-utensils mx-1"></i> Recipe Name</label>
+            <input type="text" class="form-control" id="title" placeholder="" required onblur="title_check()">
+            <div class="invalid-feedback" id="title_feedback">
+                Title should longer than 6 characters.
+            </div>
+        </div>
+
+        <!-----------------------------------------  Ingredients  ----------------------------------------->
+        <div class="h5 border-bottom pb-3" id ="ingredients_form_father"><i class="fas fa-pepper-hot mx-1"></i>Ingredients</div>
+        <br>
+        <div class="form-row border-bottom" id="ingredients_form" data_num="1">
+            <!-----------------------------------------  Ingredient name ----------------------------------------->
+            <div class="col-md-5 mb-4 px-4" id="ingredient_name_form1">
+                <label for="ingredients1">Ingredient name</label>
+                <input type="text" class="form-control" id="ingredients1" value="" data_num="1" onblur="get_cat_recommend(this)" required>
+                <div class="valid-feedback" id="name_feedback1">
+                    Looks good!
+                </div>
+            </div>
+
+            <!-----------------------------------------  Ingredient category ----------------------------------------->
+            <div class="col-md-5 mb-4 px-4" id="ingredients_cat_form1">
+                <label for="ingredients_cat1">Ingredient Type</label>
+                <select class="custom-select" id="ingredients_cat1" data_value="" required>
+                    <option selected disabled value="">Choose...</option>
+                    <option>Dairy</option>
+                    <option>Baking & Grains</option>
+                    <option>Vegetables</option>
+                    <option>Meat</option>
+                    <option>Fruits</option>
+                    <option>Condiments</option>
+                    <option>Liquor</option>
+                    <option>Deserts and snacks</option>
+                    <option>Beverages</option>
+                    <option>Added Sweeteners</option>
+                    <option>Nuts</option>
+                    <option>Seafood</option>
+                    <option>Oils</option>
+                    <option>Legumes</option>
+                    <option>Soup</option>
+                    <option>Garnish</option>
+                </select>
+                <div class="valid-feedback">
+                    Please select a valid category.
+                </div>
+            </div>
+            <!-----------------------------------------  Add more ingredient button ----------------------------------------->
+            <button type="button" class="btn btn-outline-warning my-4" id="add_more_button" onclick="add_more_ingredient()">Add more</button>
+        </div>
+
+        <!-----------------------------------------  Meal type select button list----------------------------------------->
+        <div class="form-group h5 mt-2">
+            <label ><i class="fas fa-tags mx-1"></i>Meal Type</label>
+            <div id="cat_button_list">
+
+            </div>
+        </div>
+
+        <!-----------------------------------------  Cook time ----------------------------------------->
+        <div class="my-2 h5"><i class="fas fa-clock mx-1"></i>Time</div>
+        <div class="form-row mt-2">
+            <div class="col-md-2" id="hour">
+                <input type="text" class="form-control" id="hour_input" value="" data_num="1" placeholder="Hour">
+                <div class="valid-feedback" id="hour_form_feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-2 mb-4 px-1" id="minus">
+                <input type="text" class="form-control" id="minus_input" value="" data_num="1" onblur="time_check(this)" placeholder="Minutes" required>
+                <div class="valid-feedback" id="minus_form_feedback">
+                    Looks good!
+                </div>
+            </div>
+
+        </div>
+
+        <!-----------------------------------------  Description ----------------------------------------->
+        <div class="form-group mt-2 h5">
+            <label for="describe"><i class="fas fa-comment-alt mx-1"></i>Describe</label>
+            <textarea class="form-control" id="describe" rows="5" required onblur="describe_check()"></textarea>
+            <div class="invalid-feedback" id="describe_feedback">
+                Describe should longer than 20 characters.
+            </div>
+        </div>
+
+        <!-----------------------------------------  Cook step ----------------------------------------->
+        <div class="mt-2 h5"><i class="fas fa-list-ol mx-1"></i> How to cook</div>
+        <div class="form-row mt-2" id="step_form">
+            <div class="col-md-1 h6 py-2 border alert-secondary ml-2 text-center" id = "step_title_1">Step1 </div>
+            <input type="text" class="form-control col-md-9" id="step1" value="" data_num="1" required>
+            <button type="button" class="btn btn-outline-warning mb-2" id="add_more_step_button" onclick="add_more_step()">Add more step</button>
+
+        </div>
+
+        <!-----------------------------------------  Recipe image ----------------------------------------->
+        <div class="form-group mt-2 h5">
+            <label for="imgfile"><i class="fas fa-image mx-1"></i>Upload recipe image</label>
+            <input type="file" class="form-control-file" id="imgfile">
+        </div>
+        <!-----------------------------------------  Recipe image review ----------------------------------------->
+        <div class= "my-3" id ="img_preview">
+            <img id="preview_img" width="240" height="180" src="">
+        </div>
+
+        <!-----------------------------------------  Upload button ----------------------------------------->
+        <button type="button" class="btn btn-warning" id="upload_button">Upload</button>
+
+        <!-----------------------------------------  Error alert ----------------------------------------->
+        <div class="alert-danger d-none" id="upload_alert">Please check each input form</div>
+    </form>
+
+</div>
+<br>
+<br>
+<br>
+<br>
+
+
+
+<!-- JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- bootstrap.bundle.js include popper.js-->
+<script src="../../Static/js/jquery-3.5.1.min.js" ></script>
+<script src="../../Static/js/bootstrap.bundle.js" ></script>
+
+<script>
+    // set upload button click event
+    let upload_button = document.getElementById("upload_button");
+    upload_button.addEventListener("click", upload);
+
+    // call function for get meal type category button list
+    get_cat_button_list();
+
+    // sign add more ingredient number
+    var add_num = 1;
+
+    // check title input
+    function title_check() {
+        let title = document.getElementById("title");
+        if (title.value.length< 6){
+            document.getElementById("title").className="form-control is-invalid";
+        }else{
+            let feedback = document.getElementById("title_feedback");
+            feedback.className = "valid-feedback";
+            feedback.innerText = "Looks good";
+            title.className = "form-control is-valid";
+        }
+    }
+
+    // check describe input
+    function describe_check() {
+        let describe = document.getElementById("describe");
+        if (describe.value.length< 6){
+            document.getElementById("describe").className="form-control is-invalid";
+        }else{
+            let feedback = document.getElementById("describe_feedback");
+            feedback.className = "valid-feedback";
+            feedback.innerText = "Looks good";
+            describe.className = "form-control is-valid";
+        }
+    }
+
+    // check each input form, if all valid, send corresponding value to /publish_api use PUT method
+    // if there not all valid, display an error alert to tell user check each input form
+    function upload() {
+
+        // check title input
+        let title = document.getElementById("title").value;
+        if (title.length< 6){
+            document.getElementById("title").className="form-control is-invalid";
+        }
+
+        // check ingredients input
+        let ingredients_form_len = document.getElementById("ingredients_form").children.length/3;
+        var ingredient_list = [];
+        for(var i = 1; i <= ingredients_form_len; i++){
+            let feedback = document.getElementById("name_feedback"+i);
+            if (feedback.className.includes("invalid")){
+                let upload_alert = document.getElementById("upload_alert");
+                upload_alert.className="alert-danger";
+                return;
+            }
+            let ingredients = document.getElementById("ingredients"+i).value;
+            let categories = document.getElementById("ingredients_cat"+i).value;
+            ingredient_list.push({"name":ingredients, "cat": categories});
+
+        }
+
+        // check meal type button status
+        var cat_list = [];
+        let cat_button_list = document.getElementById("cat_button_list");
+        let cat_button_list_len = document.getElementById("cat_button_list").children.length;
+        for(var j = 0; j<cat_button_list_len; j++){
+            if (cat_button_list.children[j].className.includes("warning")){
+                cat_list.push(cat_button_list.children[j].id);
+            }
+        }
+
+
+        // check feedback class name not invalid
+        let hour = document.getElementById("hour_input").value;
+        let hour_feedback = document.getElementById("hour_form_feedback");
+
+        let minus = document.getElementById("minus_input").value;
+        let minus_feedback = document.getElementById("minus_form_feedback");
+
+        let describe = document.getElementById("describe").value;
+        let describe_feedback = document.getElementById("describe_feedback");
+
+        if (hour_feedback.className.includes("invalid") || minus_feedback.className.includes("invalid") || describe_feedback.className.includes("invalid")){
+            let upload_alert = document.getElementById("upload_alert");
+            upload_alert.className="alert-danger";
+            return;
+        }
+
+        // check step input form
+        let steps_len = document.getElementById("step_form").children.length/3;
+
+        var step_list = [];
+        for(var k = 1; k <= steps_len; k++){
+            let step = document.getElementById("step"+k);
+            if (step.value.length<10){
+                let upload_alert = document.getElementById("upload_alert");
+                upload_alert.innerText = "Each step should be longer than 10 characters";
+                upload_alert.className="alert-danger";
+                return;
+            }
+            step_list.push(step.value);
+        }
+
+        // get image value from imgfile element
+        let img = document.getElementById('imgfile').value;
+
+        // send request
+        $.ajax({
+            url: "/publish_api",
+            type: "POST",
+            dataType: "JSON",
+
+            data: {
+                "title": title,
+                "ingredients": JSON.stringify(ingredient_list),
+                "select_cat": JSON.stringify(cat_list),
+                "hour": hour,
+                "minus": minus,
+                "describe": describe,
+                "steps": JSON.stringify(step_list),
+                "img": img
+            },
+            success: function (response) {
+                alert("Success");
+                window.location.href = "/";
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // add one more ingredient input form
+    function add_more_ingredient() {
+        let ingredients_form = document.getElementById("ingredients_form");
+        add_num+=1;
+        let n = add_num;
+        let new_ingredient = document.createElement("div");
+        new_ingredient.className = "col-md-5 mb-5 px-4";
+        new_ingredient.id = "ingredient_name_form" + add_num;
+        new_ingredient.innerHTML+= "<label for=\"ingredients"+add_num+"\">Ingredient name</label>\n" +
+        "                <input type=\"text\" class=\"form-control\" id=\"ingredients"+add_num+"\" value=\"\" data_num=\""+add_num+"\" onblur=\"get_cat_recommend(this)\" required>\n" +
+        "                <div class=\"valid-feedback\" id=\"name_feedback"+add_num+"\">\n" +
+        "                    Looks good!\n" +
+        "                </div>\n";
+        let new_cat = document.createElement("div");
+        new_cat.className = "col-md-5 mb-5 px-4";
+        new_cat.id="ingredients_cat_form"+add_num;
+        new_cat.innerHTML+= "                <label for=\"ingredients_cat"+add_num+"\">Ingredient Category</label>\n" +
+        "                <select class=\"custom-select\" id=\"ingredients_cat"+add_num+"\" data_value=\"\" onblur=\"ingredients_cat_store(this)\" required >\n" +
+        "                    <option selected disabled value=\"\">Choose...</option>\n" +
+        "                    <option>Dairy</option>\n" +
+        "                    <option>Baking & Grains</option>\n" +
+        "                    <option>Vegetables</option>\n" +
+        "                    <option>Meat</option>\n" +
+        "                    <option>Fruits</option>\n" +
+        "                    <option>Condiments</option>\n" +
+        "                    <option>Liquor</option>\n" +
+        "                    <option>Deserts and snacks</option>\n" +
+        "                    <option>Beverages</option>\n" +
+        "                    <option>Added Sweeteners</option>\n" +
+        "                    <option>Nuts</option>\n" +
+        "                    <option>Seafood</option>\n" +
+        "                    <option>Oils</option>\n" +
+        "                    <option>Legumes</option>\n" +
+        "                    <option>Soup</option>\n" +
+        "                    <option>Garnish</option>\n" +
+        "                </select>\n" +
+        "                <div class=\"valid-feedback\">\n" +
+        "                    Please select a valid category.\n" +
+        "                </div>\n";
+
+        let button = document.createElement("button");
+        button.innerText="Delete";
+        button.className="btn btn-outline-danger mb-5 mt-4";
+        button.type="button";
+        button.id = "delete_ingredient_button"+n;
+        button.setAttribute("data_num",n);
+        button.addEventListener("click", function () {
+            let ingredients_name_form = document.getElementById("ingredient_name_form"+n);
+            ingredients_name_form.remove();
+            let ingredients_cat_form = document.getElementById("ingredients_cat_form"+n);
+            ingredients_cat_form.remove();
+            let delete_ingredient_button = document.getElementById("delete_ingredient_button"+n);
+            delete_ingredient_button.remove();
+        })
+
+        ingredients_form.appendChild(new_ingredient);
+        ingredients_form.appendChild(new_cat);
+        ingredients_form.appendChild(button);
+
+    }
+
+    // get ingredient type recommend, such as user input beef, recommend type maybe is meat
+    // send ingredient to /recommend/ing_type through GET method with ingredient value
+    // if success, check response package, if ing_type is not '', show the valid feedback with response type
+    // if ing_type is  '', means not recommend type yet
+    // if request return erro, show invalid feed back
+    function get_cat_recommend(obj) {
+        let num = obj.attributes.data_num.value;
+        let ingredients = document.getElementById("ingredients"+num);
+        let name_feedback = document.getElementById("name_feedback"+num);
+        $.ajax({
+            url: '/recommend/ing_type',
+            type: 'GET',
+            dataType: "JSON",
+            data: {
+                "ingredient": ingredients.value,
+            },
+            success: function (response){
+                let ing_type = response["type"];
+                if (ing_type != ''){
+                    name_feedback.className = "valid-feedback";
+                    name_feedback.innerText = "Great，recommend category: "+response["type"];
+                    ingredients.className = "form-control is-valid";
+                }
+                else {
+                    name_feedback.className = "valid-feedback";
+                    name_feedback.innerText = "Looks good!";
+                    ingredients.className = "form-control is-valid";
+                }
+            },
+            error: function (error) {
+                name_feedback.className = "invalid-feedback";
+                name_feedback.innerText = error.responseJSON["msg"];
+                ingredients.className = "form-control is-invalid";
+                console.error("error:", error);
+            }})
+
+
+    }
+
+    // when meal type button click, change the button color
+    function change_cat_button(obj) {
+        if (obj.className.includes("light")){
+            obj.className="btn btn-warning mx-1 my-1";
+        }else {
+            obj.className="btn btn-light mx-1 my-1"
+        }
+    }
+
+    // get this recipe meal type information
+    function get_cat_button_list() {
+        let cat_button_list = document.getElementById("cat_button_list");
+        $.ajax({
+            url: '/publish/rec_type',
+            type: 'GET',
+            dataType: "JSON",
+            success: function (response){
+                cat_button_list.innerHTML = "";
+                for (k in response) {
+                    cat_button_list.innerHTML += "<button type=\"button\" class=\"btn btn-light mx-1 my-1\" id=\"rec_type"+response[k]["id"]+"\" onclick=\"change_cat_button(this)\">"+response[k]["cat"]+"</button>";
+                }
+
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+
+        })
+    }
+
+    // check time input form, and if minus larger than 60, calculate the time and change input value with correct format
+    function time_check(obj) {
+        let hour = document.getElementById("hour_input");
+        let minus = document.getElementById("minus_input");
+        let minus_feedback = document.getElementById("minus_form_feedback");
+        let hour_value = hour.value;
+        let minus_value = minus.value;
+
+        if (hour_value == "" && minus_value ==""){
+            minus.className="form-control is-invalid";
+            let minus_feedback = document.getElementById("minus_form_feedback");
+            minus_feedback.innerText = "Please input valid number";
+            minus_feedback.className = "invalid-feedback";
+        }else{
+            try{
+                if (isNaN(Number(hour_value)) || isNaN(Number(minus_value))){
+                    throw "Error";
+                }
+                var h = parseInt(Number(minus_value)/60);
+                var m = Number(minus_value)-(60*h);
+
+
+                h = h +Number(hour_value);
+
+                hour.className = "form-control is-valid";
+                minus.className="form-control is-valid";
+
+                minus_feedback.className = "valid-feedback";
+                hour.value = h;
+                minus.value = m;
+            }catch (e) {
+                minus.className="form-control is-invalid";
+
+                minus_feedback.innerText = "Please input valid number";
+                minus_feedback.className = "invalid-feedback";
+            }
+        }
+    }
+
+    // add one more step input form
+    function add_more_step() {
+        let step_form = document.getElementById("step_form");
+        let num = step_form.children.length/3;
+        let dic={}
+        for(var i = 1; i<=num; i++){
+            let step = document.getElementById("step"+i);
+            dic[i]={"content": step.value}
+        }
+        step_form.innerHTML="";
+        for(var j = 1; j <=num; j++){
+            step_form.innerHTML+="<div class=\"col-md-1 h6 py-2 border alert-secondary ml-2 my-1 text-center\" id='step_title_"+j+"'>Step"+j+" </div>\n" +
+                "            <input type=\"text\" class=\"form-control col-md-9 my-1\" id=\"step"+j+"\" value=\""+dic[j]["content"]+"\" data_num=\"1\" required>\n";
+
+            if (j == 1){
+                step_form.innerHTML+="            <button type=\"button\" class=\"btn btn-outline-warning my-1\" id=\"add_more_step_button\" onclick=\"add_more_step()\">Add more step</button>";
+            }else {
+                step_form.innerHTML+="            <button type=\"button\" class=\"btn btn-outline-danger my-1\" id=\"delete_step_button\" data_num='"+j+"' onclick=\"delete_step(this)\">Delete this step</button>";
+            }
+        }
+
+        step_form.innerHTML+="<div class=\"col-md-1 h6 py-2 border alert-secondary ml-2 my-1 text-center\" id='step_title_"+j+"'>Step"+j+" </div>\n" +
+            "            <input type=\"text\" class=\"form-control col-md-9 my-1\" id=\"step"+j+"\" value=\"\" data_num=\"1\" required>\n"+
+            "            <button type=\"button\" class=\"btn btn-outline-danger my-1\" id=\"delete_step_button\" data_num='"+j+"' onclick=\"delete_step(this)\">Delete this step</button>";
+    }
+
+    // when delete step button clicked delete this step
+    function delete_step(obj) {
+        var num=Number(obj.attributes.data_num.value);
+        let step_form = document.getElementById("step_form");
+
+        let len = step_form.children.length/3;
+
+        let step_title = document.getElementById('step_title_'+num);
+        step_title.remove();
+        let step = document.getElementById("step"+num);
+        step.remove();
+        obj.remove();
+
+        var dic = {}
+        var cur = 1;
+        for (var i = 1; i <= len; i++){
+            try{
+                let step = document.getElementById("step"+i);
+                dic[cur] = {"content": step.value}
+                cur+=1;
+            }catch (e) {
+                continue
+            }
+        }
+        step_form.innerHTML="";
+
+        for(var j = 1; j < len; j++){
+            step_form.innerHTML+="<div class=\"col-md-1 h6 py-2 border alert-secondary ml-2 my-1 text-center\" id='step_title_"+j+"'>Step"+j+" </div>\n" +
+                "            <input type=\"text\" class=\"form-control col-md-9 my-1\" id=\"step"+j+"\" value=\""+dic[j]["content"]+"\" data_num=\"1\" required>\n";
+            if (j == 1){
+                step_form.innerHTML+="            <button type=\"button\" class=\"btn btn-outline-warning my-1\" id=\"add_more_step_button\" onclick=\"add_more_step()\">Add more step</button>";
+            }else {
+                step_form.innerHTML+="            <button type=\"button\" class=\"btn btn-outline-danger my-1\" id=\"delete_step_button\" data_num='"+j+"' onclick=\"delete_step(this)\">Delete this step</button>";
+            }
+        }
+    }
+
+    // when imgfile element change, send this image to backend
+    // if request return success, preview the image
+    $('#imgfile').on('change',function(){
+        var data = new FormData();
+        data.append('images',$(this)[0].files[0]);
+        $.ajax({
+            url:'/publish/file',
+            data: data,
+            type:'POST',
+            dataType:'JSON',
+            processData:false,
+            cache: false,
+            contentType: false,
+            success:function(res){
+                tmp_url=res.url;
+                let img_preview = document.getElementById("img_preview");
+                img_preview.innerHTML="";
+                var show="<img width='240' height='180' src="+tmp_url+">&nbsp;";
+                $('#img_preview').append(show);
+            },
+            error:function(res){
+                console.log(res.msg);
+            }
+        })
+    });
+
+</script>
+
+</body>
+</html>

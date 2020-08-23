@@ -1,0 +1,41 @@
+Week 1
+Attend COMP9900 Lab and gain an overview of different projects
+Join group meeting after lab
+Go through the assessment guideline and marking criterion
+
+Week 2
+Attend three group meetings and discuss the task regarding project
+Conduct the survey on similar websites and analyze their drawbacks
+Write proposal
+
+Week 3
+Join weekly meeting
+Finalize proposal and familiar with flask framework
+
+week 4
+Join weekly meeting
+Propose and write the classification of different types of recipes
+
+week 5
+Update and organize the user stories on jira with Sheng Du
+Make the presentation for Demo one
+
+Week 6
+Join weekly meeting and discuss the process of project with team members
+Collect the type data for database
+Collect and make the icon for ingredients category
+Participate in the design of front-end page
+
+week 7
+Join weekly meeting
+Hold retrospective meeting and finish writing retrospective A
+
+week 8
+Update and organize the user stories on jira with Sheng Du
+Make the presentation for Demo Two
+Participate in the design of Ingredient Challenge in home page
+
+
+week 9
+Join weekly meeting
+Hold retrospective meeting and finish writing retrospective B

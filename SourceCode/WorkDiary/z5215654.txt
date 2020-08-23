@@ -1,0 +1,32 @@
+Week 1:
+Read the assessment and projects description files 
+Attended the lab F16B and went through all projects.
+Have a team meeting after the lab and allocate innitial works for next few weeks
+Start to write the project proposal.
+
+Week 2:
+Have routinely three meetings per week.
+Edit and upload steps on Jira.
+Thinking the relevant user stories and sprints for project.
+Learning django structure leasons.
+
+week 3:
+write user story and finish eidt on jira
+write the user stories and sprints parts of proposal
+learning flask structure leasons
+discuss the acceptance criteria of each user story with other group members
+define the work flow and what list the functions by the priority of them
+work with team members and finish the projject proposal
+
+week 4:
+have routinely three meetings with other team members per week.
+aiisgned and start with the indivual part of program coding
+thinking the structure of the publish function of our website
+learning how the upload files and connect with front and so on 
+
+week 5:
+working on demo one
+finish some basic code of publish function and still editting these part
+
+week 6:
+accomplish the basic structure of publish which can simplely add name,time,steps but not images

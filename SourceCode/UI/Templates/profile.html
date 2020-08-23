@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="ZH">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../Static/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="../../Static/css/all.min.css">
+    <title>Meal Match</title>
+
+
+</head>
+
+
+<body>
+
+<!-----------------------------------------  NavBar ----------------------------------------->
+
+<nav class="navbar navbar-expand-lg navbar-light border-bottom" >
+
+    <a class="navbar-brand" href="/">Meal Match</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home </a>
+            </li>
+            <!-----------------------------------------  Meal type dropdown list ----------------------------------------->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Meal Type
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/search?filter=4&string=">Appetizers & Snacks</a>
+                    <a class="dropdown-item" href="/search?filter=5&string=">Breakfast & Brunch</a>
+                    <a class="dropdown-item" href="/search?filter=6&string=">Lunch</a>
+                    <a class="dropdown-item" href="/search?filter=7&string=">Desserts</a>
+                    <a class="dropdown-item" href="/search?filter=8&string=">Dinner</a>
+                    <a class="dropdown-item" href="/search?filter=9&string=">Drinks</a>
+                </div>
+            </li>
+
+        </ul>
+
+        <!-----------------------------------------  Share recipe button ----------------------------------------->
+        <button type="button" class="btn btn-warning px-3 mx-3" id = "publish_button">Share My Recipe</button>
+
+        <!-----------------------------------------  User icon ----------------------------------------->
+        <div class="nav-item px-1 mx-2" id="user_icon_dropdown">
+            <a role="button" id="user_icon">
+                <img src="../../Static/icon/person-circle.svg" alt="" width="32" height="32" title="User">
+            </a>
+
+        </div>
+    </div>
+</nav>
+<div id="user_info" class="junbotron jumbotron-fluid bg-light">
+    <div class="container">
+        <br>
+        <!----------------------------------------- User information ----------------------------------------->
+        <div class="container">
+            <h1 class="display-5">Welcome back {{username}}!</h1>
+            <div class="text-black-50">Level <small class="text-warning border-warning h6">{{lv}}</small></div>
+            <div class="progress">
+                <div class="progress-bar bg-warning" role="progressbar" style="width: {{exp_value}}%;" aria-valuenow="{{exp_value}}" aria-valuemin="0" aria-valuemax="100">{{exp}}</div>
+            </div>
+            <br>
+            <p class="lead"> Here you can change your sign up information </p>
+            <p class="lead"> and manage your favorite or published recipe.</p>
+        </div>
+
+        <br>
+
+    </div>
+</div>
+<!-----------------------------------------  user_info style custom ----------------------------------------->
+<style>
+    #user_info{
+        background: url("../../Static/img/HomePage/profile_info.jpg")  no-repeat;
+        background-position: center;
+        background-size: 1800px 800px;
+    }
+</style>
+
+<br>
+<br>
+<br>
+<div class="row">
+
+    <!----------------------------------------- profile page tab list include profile, favorite and shared recipe----------------------------------------->
+    <div class="col-2">
+        <div class="list-group" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-warning  list-group-item list-group-item-action active" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
+            <a class="list-group-item list-group-item-warning list-group-item-action" id="list-favorite-list" data-toggle="list" href="#list-favorite" role="tab" aria-controls="favorite">Favorite</a>
+            <a class="list-group-item list-group-item-warning list-group-item-action" id="list-publiced-list" data-toggle="list" href="#list-publiced" role="tab" aria-controls="publiced">Shared recipe</a>
+
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                <div class="container">
+                    <form class="px-4 py-3 border">
+                        <!-----------------------------------------  user name inpu form ----------------------------------------->
+                        <div class="form-group col-md-4">
+                            <label for="username"><i class="far fa-user mx-1"></i>Username</label>
+                            <input type="text" class="form-control-plaintext" id="username" value = "{{username}}">
+                        </div>
+
+                        <!-----------------------------------------  email input form ----------------------------------------->
+                        <div class="form-group col-md-6">
+                            <label for="email"><i class="far fa-envelope mx-1"></i>Email</label>
+                            <input type="text" class="form-control-plaintext" id="email" value = "{{email}}" onchange="email_form_change(this)">
+                            <div class="valid-feedback" id="email_feedback">
+                                Looks good!
+                            </div>
+                        </div>
+
+                        <!-----------------------------------------  email confirm button ----------------------------------------->
+                        <div class="d-none col-md-6" id = "confirm_button_div">
+                            <button type="button" class="btn btn-sm btn-warning col-md-2 my-4 mx-1 text-center " onclick="confirm_email(this)">Confirm email  <div class="d-none" id ="countdown_info">again later on <div class="d-none" id = "countdown">0</div>seconds</div></button>
+                        </div>
+
+                        <!-----------------------------------------  email verification code input form ----------------------------------------->
+                        <div class="d-none col-3 my-2" id = "verify_div">
+                            <label for="verify"><i class="fas fa-qrcode mx-1"></i>Email verification code</label>
+                            <input type="form-text" class="form-control" id="verify" placeholder="" style="text-transform:uppercase" required onblur="verify_check(this)">
+                            <div class="valid-feedback" id="verify_feedback">
+                                Verify code correct.
+                            </div>
+                        </div>
+
+                        <!-----------------------------------------  password input form ----------------------------------------->
+                        <div class="form-group col-md-4">
+                            <label for="password1"><i class="fas fa-key mx-1"></i>Reset password</label>
+                            <input type="password" class="form-control-plaintext" id="password1" placeholder="Password" value="" onblur="password_check(this)">
+                            <div class="valid-feedback" id="password_feedback">
+                                Looks good!
+                            </div>
+                        </div>
+
+                        <!-----------------------------------------  confirm password input form ----------------------------------------->
+                        <div class="form-group col-md-4">
+                            <label for="password2"><i class="fas fa-key mx-1"></i>Confirm Password</label>
+                            <input type="password" class="form-control-plaintext" id="password2" placeholder="Password" value="" onblur="password_confirm_check(this)">
+                            <div class="valid-feedback" id="password_confirm_feedback">
+                                Looks good!
+                            </div>
+                        </div>
+
+                        <!----------------------------------------- preference button list ----------------------------------------->
+                        <div class="form-group h5 mt-2">
+                            <label >Preference</label>
+                            <div id="cat_button_list"></div>
+                        </div>
+
+                        <!-----------------------------------------  upload button ----------------------------------------->
+                        <button type="button" class="btn btn-warning mt-2" id="upload_button">Update</button>
+
+                        <!-----------------------------------------  Error alert ----------------------------------------->
+                        <div class="alert-danger d-none" id="upload_alert">Please check each input form</div>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="list-favorite" role="tabpanel" aria-labelledby="list-favorite-list">
+                <!-----------------------------------------  favorite recipe list ----------------------------------------->
+                <ul class="list-group pagination justify-content-center" id="recipe_list"></ul>
+                <br>
+                <br>
+                <br>
+            </div>
+
+
+            <div class="tab-pane fade" id="list-publiced" role="tabpanel" aria-labelledby="list-publiced-list">
+                <!-----------------------------------------  shared recipe list ----------------------------------------->
+                <ul class="list-group pagination justify-content-center" id="publiced_recipe_list"></ul>
+                <br>
+                <br>
+                <br>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- bootstrap.bundle.js include popper.js-->
+<script src="../../Static/js/jquery-3.5.1.min.js" ></script>
+<script src="../../Static/js/bootstrap.bundle.js" ></script>
+
+<script>
+
+    //call function for get user favorite recipe list
+    get_favorite();
+
+    //call function for get user shared recipe list
+    get_published();
+
+    //call function for get user preference and set preference button
+    get_preference();
+
+    // set user icon dropdown list
+    user_icon_dropdown();
+
+    // set profile upload button button click event
+    let profile_button = document.getElementById("upload_button");
+    profile_button.addEventListener("click", upload);
+
+    // set publish edit button button click event
+    let publish_button = document.getElementById("publish_button");
+    publish_button.addEventListener("click",publish);
+
+    // check each input form, if all valid, send corresponding value to /reset_profile use POST method
+    // if there not all valid, display an error alert to tell user check each input form
+    function upload() {
+        let username = document.getElementById("username").value;
+        let email = document.getElementById("email").value;
+        let cat_button_list = document.getElementById("cat_button_list");
+
+        let password = document.getElementById("password1").value;
+        let confirm_password = document.getElementById("password2").value;
+
+        var cat_list = []
+        for(var i = 0; i< cat_button_list.children.length; i++){
+
+            if (cat_button_list.children[i].className.includes("warning")){
+                cat_list.push(cat_button_list.children[i].id);
+            }
+        }
+
+        if (password !=confirm_password){
+            let upload_alert = document.getElementById("upload_alert");
+            upload_alert.className="alert-danger";
+            return;
+        }
+        $.ajax({
+            url: "/reset_profile",
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                "username": username,
+                "email": email,
+                "cat":JSON.stringify(cat_list),
+                "password1": password,
+                "password2":confirm_password
+            },
+            success: function (response) {
+
+                alert("success");
+                window.location.href = "/";
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // send recipe id to /favorite with DELETE method for delete favorite recipe
+    function delete_favorite(obj) {
+        id = obj.attributes.data_num.value;
+        $.ajax({
+            url: "/favorite",
+            type: "DELETE",
+            dataType: "JSON",
+            data: {
+                "id": id
+            },
+            success: function (response) {
+                location.reload();
+
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // get user favorite recipe list and append into recipe_list element
+    function get_favorite() {
+        let recipe_list = document.getElementById("recipe_list");
+        $.ajax({
+            url: "/favorite",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+            },
+            success: function (response) {
+                var len = 0;
+                for(k in response) {
+                   len++;
+                    if (len < 15){
+                        recipe_list.innerHTML += "<div class=\"card mb-3\" >" +
+                            "<div class=\"row no-gutters\">" +
+                            "<div class=\"col-md-4\">" +
+                            "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"> </div>" +
+                            "<div class=\"col-md-8\">" +
+                            "<div class=\"card-body\">" +
+                            "<button type=\"button\" class=\"btn btn-outline-danger float-right\" id = \"delete_button\" data_num = \"" + response[k]["id"] + "\" onclick=\"delete_favorite(this)\" >Delete</button>" +
+                            "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated "+response[k]["time"]+" ago</small></p>" +
+                            "</div></div></div></div>";
+                    }else {
+                        if (len == 15){
+                            recipe_list.innerHTML+="<a class=\"btn btn-light\" data-toggle=\"collapse\" href=\"#recipe_collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"recipe_collapse\">\n" +
+                                "    Show more\n" +
+                                "  </a>";
+                        }
+
+                        let collapse_div = document.createElement("div");
+                        collapse_div.className = "collapse";
+                        collapse_div.id = "recipe_collapse";
+
+                        collapse_div.innerHTML+="<div class=\"card mb-3\" >" +
+                            "<div class=\"row no-gutters\">" +
+                            "<div class=\"col-md-4\">" +
+                            "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"> </div>" +
+                            "<div class=\"col-md-8\">" +
+                            "<div class=\"card-body\">" +
+                            "<button type=\"button\" class=\"btn btn-outline-danger float-right\" id = \"delete_button\" data_num = \"" + response[k]["id"] + "\" onclick=\"delete_favorite(this)\" >Delete</button>" +
+                            "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated "+response[k]["time"]+" ago</small></p>" +
+                            "</div></div></div></div>";
+                        recipe_list.appendChild(collapse_div);
+                    }
+                }
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // delete shared recipe
+    function delete_published(obj) {
+        id = obj.attributes.data_num.value;
+        $.ajax({
+            url: "/publish_api",
+            type: "DELETE",
+            dataType: "JSON",
+            data: {
+                "id": id
+            },
+            success: function (response) {
+                location.reload();
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // get user shared recipe list and append into publiced_recipe_list element
+    function get_published() {
+        let recipe_list = document.getElementById("publiced_recipe_list");
+        $.ajax({
+            url: "/publish_list",
+            type: "GET",
+            dataType: "JSON",
+            success: function (response) {
+                var len = 0
+                for(k in response) {
+                    len++;
+                    if (len < 15){
+                        recipe_list.innerHTML += "<div class=\"card mb-3\" >" +
+                            "<div class=\"row no-gutters\">" +
+                            "<div class=\"col-md-4\">" +
+                            "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"> </div>" +
+                            "<div class=\"col-md-8\">" +
+                            "<div class=\"card-body\">" +
+                            "<button type=\"button\" class=\"btn btn-outline-danger float-right\" id = \"delete_button\" data_num = \"" + response[k]["id"] + " \" onclick=\"delete_published(this)\" >Delete</button>" +
+                            "<button type=\"button\" class=\"btn btn-outline-warning float-right\" id = \"edit_button\" data_num = \"" + response[k]["id"] + " \" onclick=\"javascript:window.open('/edit_publish/"+response[k]["id"]+"','_blank')\" >Edit</button>" +
+                            "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated 3 mins ago</small></p>" +
+                            "</div></div></div></div>";
+                    }else {
+                        if (len == 15){
+                            recipe_list.innerHTML+="<a class=\"btn btn-light\" data-toggle=\"collapse\" href=\"#recipe_collapse\" role=\"button\" aria-expanded=\"false\" aria-controls=\"recipe_collapse\">\n" +
+                                "    Show more\n" +
+                                "  </a>";
+                        }
+
+                        let collapse_div = document.createElement("div");
+                        collapse_div.className = "collapse";
+                        collapse_div.id = "recipe_collapse";
+
+                        collapse_div.innerHTML+="<div class=\"card mb-3\" >" +
+                            "<div class=\"row no-gutters\">" +
+                            "<div class=\"col-md-4\">" +
+                            "<img src=\"" + response[k]["img_link"] + "\" class=\"card-img-top\" alt=\"...\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"> </div>" +
+                            "<div class=\"col-md-8\">" +
+                            "<div class=\"card-body\">" +
+                            "<button type=\"button\" class=\"btn btn-outline-danger float-right\" id = \"delete_button\" data_num = \"" + response[k]["id"] + " \" onclick=\"delete_published(this)\" >Delete</button>" +
+                            "<button type=\"button\" class=\"btn btn-outline-warning float-right\" id = \"edit_button\" data_num = \"" + response[k]["id"] + " \" onclick=\"javascript:window.open('/edit_publish/"+response[k]["id"]+"','_blank')\" >Edit</button>" +
+                            "<h5 class=\"card-title\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["title"] + "</h5>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\">" + response[k]["text"] + "</p>" +
+                            "<p class=\"card-text\" onclick=\"javascript:window.open('/recipe/"+ response[k]["id"]+"','_blank')\"><small class=\"text-muted\">Last updated 3 mins ago</small></p>" +
+                            "</div></div></div></div>";
+                        recipe_list.appendChild(collapse_div);
+                    }
+                }
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+
+    }
+
+    // check email form status, if email form changed, call email check function, and display confirm email button and verify code inpu from
+    function email_form_change(obj) {
+        email_check(obj);
+        let confirm_button_div = document.getElementById("confirm_button_div");
+        let verify_div = document.getElementById("verify_div");
+        confirm_button_div.className = "";
+        verify_div.className = "";
+
+    }
+
+    // send confirm email request to /email use POST method with email address
+    // if success, set confirm button disabled, until 60 seconds later
+    function confirm_email(obj) {
+        let email = document.getElementById("email").value;
+        $.ajax({
+            url: "/email",
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                "email": email,
+            },
+            success: function (response) {
+                let countdown = document.getElementById("countdown");
+                let countdown_info = document.getElementById("countdown_info");
+                countdown.className="h7";
+                obj.className = "btn btn-sm btn-warning col-md-4 my-4 mx-1 text-center disabled";
+
+                countdown.innerText="60";
+                var n = 60;
+                if( Number(countdown.innerText) >0){
+                    var a =setInterval(confirm_countdown, 1000,obj, n, countdown, countdown_info);
+                }
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // set confirm button countdown
+    function confirm_countdown(obj, n, countdown,countdown_info) {
+        n = Number(countdown.innerText);
+        if (Number(n) > 0){
+            countdown_info.className = "h7";
+            countdown.className="h7";
+            n = n -1;
+            countdown.innerText = n;
+        }else {
+            obj.className = "btn btn-sm btn-warning col-md-2 my-4 mx-1 text-center";
+            countdown_info.className = "d-none";
+            countdown.className="d-none";
+        }
+    }
+
+    // check verify code
+    function verify_check(obj) {
+        let email = document.getElementById("email").value;
+        let feedback = document.getElementById("verify_feedback");
+        $.ajax({
+            url: '/email_verify',
+            type: 'GET',
+            dataType: "JSON",
+            data:{
+                "verify": obj.value,
+                "email": email
+            },
+            success: function (response){
+                feedback.innerText = response.msg;
+                feedback.className = "valid-feedback";
+                obj.className = "form-control is-valid";
+            },
+            error: function (error) {
+                feedback.innerText = error.responseJSON.msg;
+                feedback.className = "invalid-feedback";
+                obj.className = "form-control is-invalid";
+            }
+        })
+    }
+
+    // check email is already sign up or not
+    // send email value to /email_check
+    // if success, change email feedback, tell user this email address is valid
+    // if response error, display the error message in feedback
+    function email_check(obj) {
+        $.ajax({
+            url: '/email_check',
+            type: 'GET',
+            dataType: "JSON",
+            data:{
+                "email": obj.value,
+                "method": "signup"
+            },
+            success: function (response){
+                let feedback = document.getElementById("email_feedback");
+                feedback.innerText = response.msg;
+                feedback.className = "valid-feedback";
+                obj.className = "form-control is-valid";
+            },
+            error: function (error) {
+                let feedback = document.getElementById("email_feedback");
+                feedback.innerText = error.responseJSON.msg;
+                feedback.className = "invalid-feedback";
+                obj.className = "form-control is-invalid";
+            }
+
+        })
+    }
+
+    // get preference list, set the button color
+    // then append into cat_button_list element
+    function get_preference() {
+        let cat_button_list = document.getElementById("cat_button_list");
+        $.ajax({
+            url: '/user/pre',
+            type: 'GET',
+            dataType: "JSON",
+            success: function (response){
+                cat_button_list.innerHTML = "";
+                for (k in response) {
+                    if (!response[k]["checked"]) {
+                        cat_button_list.innerHTML += "<button type=\"button\" class=\"btn btn-light mx-1 my-1\" id=\"rec_type" + response[k]["id"] + "\" onclick=\"change_cat_button(this)\">" + response[k]["cat"] + "</button>";
+                    } else {
+                        cat_button_list.innerHTML += "<button type=\"button\" class=\"btn btn-warning mx-1 my-1\" id=\"rec_type" + response[k]["id"] + "\" onclick=\"change_cat_button(this)\">" + response[k]["cat"] + "</button>";
+                    }
+                }
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // change preference button color
+    function change_cat_button(obj) {
+        if (obj.className.includes("light")){
+            obj.className="btn btn-warning mx-1 my-1";
+        }else {
+            obj.className="btn btn-light mx-1 my-1"
+        }
+    }
+
+    // set user icon dropdown list
+    function user_icon_dropdown() {
+        let user_icon = document.getElementById("user_icon");
+        user_icon.dataset.toggle = "dropdown";
+        user_icon.setAttribute("aria-haspopup","true");
+        user_icon.setAttribute("aria-expanded","false");
+        let user_icon_dropdown = document.getElementById("user_icon_dropdown");
+        user_icon_dropdown.innerHTML+="<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuButton\">" +
+            "<a class=\"dropdown-item\" href=\"/logout\">Logout</a>"+
+            " </div>";
+    }
+
+    // check password input
+    function password_check(obj) {
+        let feedback = document.getElementById("password_feedback");
+        if (obj.value.length<6 ){
+            feedback.innerText = "Password should be longer than 6 characters"
+            feedback.className = "invalid-feedback";
+            obj.className = "form-control is-invalid";
+        }else {
+            obj.className = "form-control is-valid";
+            feedback.className = "valid-feedback";
+            feedback.innerText = "Looks good!";
+        }
+
+        let feedback2 = document.getElementById("password_confirm_feedback");
+        let password2 = document.getElementById("password2");
+
+        if (obj.value != password2.value){
+            feedback2.innerText = "Confirm password should be same as above password."
+            feedback2.className = "invalid-feedback";
+            password2.className = "form-control is-invalid";
+        }else {
+            password2.className = "form-control is-valid";
+            feedback2.className = "valid-feedback";
+            feedback2.innerText = "Looks good!";
+        }
+    }
+
+    // check confirm password input
+    function password_confirm_check(obj) {
+        let feedback = document.getElementById("password_confirm_feedback");
+        let password = document.getElementById("password1").value;
+        if (obj.value != password){
+            feedback.innerText = "Confirm password should be same as above password."
+            feedback.className = "invalid-feedback";
+            obj.className = "form-control is-invalid";
+        }else {
+            obj.className = "form-control is-valid";
+            feedback.className = "valid-feedback";
+            feedback.innerText = "Looks good!";
+        }
+    }
+
+    // If user already login in, change the corresponding alert below search bar.
+    function publish() {
+            window.location.href="/publish";
+    }
+
+</script>
+</body>
+</html>

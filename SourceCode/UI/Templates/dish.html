@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ZH">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../Static/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="../../Static/css/all.min.css">
+
+    <title>Meal Match</title>
+
+</head>
+
+
+<body>
+
+<!-----------------------------------------  NavBar ----------------------------------------->
+
+<nav class="navbar navbar-expand-lg navbar-light border-bottom" >
+    <a class="navbar-brand" href="/">Meal Match</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<br>
+<br>
+<br>
+<br>
+<!-----------------------------------------  Recipe detail ----------------------------------------->
+<div class="container">
+    <blockquote class="blockquote">
+        <!-----------------------------------------  Recipe title ----------------------------------------->
+        <p class="h1">{{title}}</p>
+
+        <!-----------------------------------------  Author info ----------------------------------------->
+        <i class="far fa-user mx-1"></i>Contributed by <cite title="Source Title"><u>{{ author }} <a class="mx-1 text-black-50 d-inline-block">  Level <small class="text-warning border-warning h6">{{lv}}</small></a></u></cite>
+
+        <!-----------------------------------------  Cook time ----------------------------------------->
+        <p class="font-weight-lighter"><i class="far fa-clock mx-1"></i>Cook time: {{hour}}{{time}} min.</p>
+    </blockquote>
+
+    <!-----------------------------------------  Recipe image ----------------------------------------->
+    <img src="{{img_link}}" width="1048px" height="600px">
+    <br>
+    <br>
+
+    <!-----------------------------------------  Recipe description ----------------------------------------->
+    <p class="text-body border-bottom mb-3">{{describe}}</p>
+    <br>
+
+    <!-----------------------------------------  Recipe ingredients requirement ----------------------------------------->
+            <div class="h3"><i class="fas fa-pepper-hot mx-1"></i>INGREDIENTS</div>
+            <p class="mb-2 text-dark">
+                {{ingredients}}
+            </p>
+
+    <!-----------------------------------------  Recipe cook step ----------------------------------------->
+            <div class="h3"><i class="fas fa-list-ol mx-1"></i>Steps</div>
+            <div class="text-break" id = "step"></div>
+
+    <!-----------------------------------------  Comment ----------------------------------------->
+    <div class="container border mt-2">
+        <div class="form-group">
+            <!-----------------------------------------  Comment form ----------------------------------------->
+            <label for="comment"><i class="far fa-comment mx-1"></i>Comment:</label>
+            <textarea class="form-control" id="comment" rows="3"></textarea>
+        </div>
+
+        <!-----------------------------------------  Submit comment button ----------------------------------------->
+        <button type="button" class="btn btn-warning" id="submit">Submit</button>
+            <br>
+            <br>
+            <br>
+        <div class="list-group" id="comment_list"></div>
+
+    </div>
+</div>
+<br>
+<br>
+<br>
+
+    <!-----------------------------------------  Sign variable for backend transfer data ----------------------------------------->
+<span class="d-none" id = "recipe_id">{{recipe_id}}</span>
+<div class="d-none" id = "u_id">{{user_id}}</div>
+
+<!-- JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- bootstrap.bundle.js include popper.js-->
+<script src="../../Static/js/jquery-3.5.1.min.js" ></script>
+<script src="../../Static/js/bootstrap.bundle.js" ></script>
+
+<script>
+    // read user id form u_id element, this inner text variable transfer from backend
+    let u_id = document.getElementById("u_id").innerText;
+
+    // call get comments function
+    get_comments();
+
+    // call get step function
+    get_step();
+
+    // send GET request to /comments with this recipe id
+    // if success, append comment card into comment_list element
+    function get_comments() {
+        let comment_list = document.getElementById("comment_list");
+
+        // read user id form recipe_id element, this inner text variable transfer from backend
+        let recipe_id = document.getElementById("recipe_id").innerText;
+
+        $.ajax({
+            url: "/comments",
+            type: "GET",
+            dataType: "JSON",
+            data:{
+                "r_id" : recipe_id,
+            },
+            success: function (response) {
+                comment_list.innerHTML ="";
+                for(let k =0; k < response.length; k++){
+                    // get c_id from response package, means comment id
+                    let c_id = response[k]["c_id"];
+
+                    // set comment card element content
+                    let card = document.createElement("div");
+                    card.className="list-group-item list-group-item-action";
+                    card.id = c_id;
+
+                    // if this comment author same as login in user, add delete button in comment card
+                    if (u_id == response[k]["id"]){
+                    card.innerHTML = "            <div class=\"d-flex w-100 justify-content-between\">\n" +
+                    "                <h6 class=\"mb-1\">"+response[k]["username"]+"<a class=\"text-black-50 mx-1\">Level <small class=\"text-warning border-warning h6\">"+response[k]["lv"]+"</small></a> </h6>\n" +
+
+                    "                <small class=\"text-muted\">"+response[k]["update_time"]+"</small>\n" +
+
+                    "            </div>\n" +
+                    "            <p class=\"mb-1\">"+response[k]["content"]+"</p>"+
+                        "<button class=\"btn btn-sm btn-light float-right\" onclick='delete_comment(this)' c_id = \""+response[k]["c_id"]+"\">Delete</button>";
+                    }
+                    else{
+                        card.innerHTML = "            <div class=\"d-flex w-100 justify-content-between\">\n" +
+                            "                <h6 class=\"mb-1\">"+response[k]["username"]+"</h6>\n" +
+                            "                <small class=\"text-muted\">"+response[k]["update_time"]+"</small>\n" +
+                            "            </div>\n" +
+                            "            <p class=\"mb-1\">"+response[k]["content"]+"</p>";
+                    }
+
+                    // append comment card int comment list
+                    comment_list.appendChild(card);
+                }
+                comment_list.innerHTML+="<br><br>";
+            },
+            error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+
+    // send DELETE request to /comments with comment id
+    // if success, refresh comment list
+    function delete_comment(obj){
+        // read comment id from delete button attribute
+        let c_id = obj.attributes.c_id.value;
+            $.ajax({
+                url: "/comments",
+                type: "DELETE",
+                dataType: "JSON",
+                data:{
+                    "c_id" : c_id,
+                },
+                success: function (response) {
+                    get_comments();
+                },error:function(){}})
+    }
+
+
+    // get cook step from /recipe/steps use GET method
+    // if success, append step list into step element
+    function get_step() {
+        let recipe_id = document.getElementById("recipe_id").innerText;
+        let step = document.getElementById("step");
+        $.ajax({
+            url: "/recipe/steps",
+            type: "GET",
+            dataType: "JSON",
+            data:{
+                "id" : recipe_id,
+            },success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    let content = document.createElement("div");
+                    content.innerText =response[i];
+                    step.appendChild(content);
+                }
+            },error: function (error) {
+                console.error("error:", error);
+            }
+        })
+    }
+</script>
+
+<script>
+
+    // add even listener for comment submit button
+    let submit_button = document.getElementById("submit");
+    submit_button.addEventListener("click", submit_comment);
+
+    // send comment form text to /comments use POST method
+    // if success, show alert tell user success
+    // if error, show alert tell user need to login
+    function submit_comment(){
+        let comment = document.getElementById("comment").value;
+        let recipe_id = document.getElementById("recipe_id").innerHTML;
+
+        $.ajax({
+            url: "/comments",
+            type: "post",
+            dataType: "JSON",
+            data:{
+                "comment": comment,
+                "r_id": recipe_id
+            },
+            success: function (response) {
+                alert('submit success');
+                window.location.href = "/recipe/"+recipe_id;
+            },
+            error: function (error) {
+                alert('Please login.');
+                console.error("error:", error);
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

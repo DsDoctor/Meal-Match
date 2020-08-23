@@ -1,0 +1,121 @@
+---Week1---
+02/06/2020:
+Select project with team members.
+
+05/06/2020:
+serve as team leader.
+Send Email to Ali submit the team information.
+Group discuss after tutorial.
+Start to write proposal.
+Create Jira project and submit some user story.
+
+---week2---
+08/06/2020:
+design webpage layout and interface.
+build navigation bar include login form.
+update user story.
+
+09/06/2020:
+discuss the structure of project web and design for web site with Sheng Du.
+
+11/06/2020:
+Draw Interface & Flow Diagram.
+Update proposal.
+
+12/06/2020:
+Have a meeting with team member, assign task for weekend.
+
+---week3---
+15/06/2020:
+Have a meeting with team member, confirm progress and assign task.
+Align the progress of proposal.
+
+16/06/2020:
+Have a meeting with Sheng Du, confirm the framework.
+Add more interface diagram.
+
+17/06/2020:
+Build home page and sign up page.
+Draw a gantt chart for project management.
+Draw software architecture framework diagrams.
+
+19/06/2020:
+have a meeting with team member confirm progress and allocate task for proposal.
+
+20/06/2020:
+Add some user story, and collate proposal format.
+
+21/06/2020:
+Add screenshot and collate proposal format.
+Submit proposal, and arrange proposal files.
+
+22/06/2020:
+add search form in home page,
+set the search form background,
+add publish button in navigation bar,
+add demo card for display(waiting for backend part then I can use JS to request the data for display).
+
+---week4---
+23/06/2020:
+Have a team meeting to align the code structure of project.
+Standardising SQL data with team member.
+Design API structure with Sheng Du.
+
+24/06/2020:
+Confirm API structure.
+Allocate task for next two days.
+
+26/06/2020:
+Have a meeting with Sheng Du, discuss the method of using API.
+Successfully config the api structure.
+Add login, signup and password reset page.
+
+27/06/2020:
+Have a meeting with Sheng Du, align the functionality of user login, signup, publish management.
+Update login request and fix home page bugs.
+
+28/06/2020:
+Update home page card template.
+Update login form.
+Add ingredients page filter feature.
+
+---week5---
+01/07/2020:
+Add profile manage and published dish manage page.
+Update search feature.
+
+03/07/2020:
+Update ingredient request and ingredient page.
+
+---week6---
+Waiting for Yaming and Yan update search and publish feature.
+
+---week7---
+Finish RetrospectiveA.
+Update favourite and published dish manage page.
+Still waiting for search feature update.
+
+--week8--
+Merge profile, favourite and shared recipe manage page.
+Add email confirm feature for sign up, reset password and change email form
+Add Ingredient challenge in home page, to tell user which ingredients set is search frequently but not have recipe yet.
+Add favourite button for home page recipe cards.
+Update share recipe form, add input check event listener.
+Rebuild forgot password page, let user can use email confirm to reset password.
+Prepare for Demo
+
+--week9--
+Finish Share recipe page
+Add comment delete button in recipe detail page.
+Fix bug for every page.
+Write document for source code.
+Prepare for RetrospectiveB
+
+--week10--
+Finish frontend
+clear up frontend code and add comments
+prepare for final demo
+write report
+
+
+

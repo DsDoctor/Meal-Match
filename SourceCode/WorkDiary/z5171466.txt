@@ -1,0 +1,95 @@
+--Week 1
+30/05/2020:
+Create Github Project.
+Team up collaborators, and invite teammates to participate in the project.
+
+05/06/2020:
+Group discuss after tutorial.
+update proposal
+including project objects analysis and listing the functions for project
+
+--Week 2
+08/06/2020:
+Create a scrapy program for collecting data.
+Surveyed some websites correspond to meal match:
+    mealthy.com; www.delish.com; www.seriouseats.com/recipes;
+Create 3 spiders for above 3 websites.
+Starting test the spider download the web pages as mentioned.
+
+09/06/2020:
+Have a chat with admin, discuss the structure of project web and design for web site.
+Draw mind map for project assessments and proposal mark criteria.
+
+10/06/2020:
+Meeting.
+
+11/06/2020:
+Analysed system architecture, draw a ver1.0 flow chart.
+Discuss the users interface in the meeting with admin.
+
+12/06/2020:
+Group discuss after tutorial.
+Discuss the product form and the architecture, followed by tasks that team members need to complete separately.
+
+13/06/2020:
+Complete the description of the architecture section.
+Organize code framework.
+
+--Week 3
+15/06/2020:
+Have a meeting to align the progress of proposal.
+add the information of interface flow chart.
+
+19/06/2020:
+Crate scrapy program for collecting data from 'delish'
+
+20/06/2020:
+Finish proposal writing. Learn Flask Framework and knowledge of frontend.
+
+--Week 4
+23/06/2020:
+Have a team meeting to align the code structure of project.
+Create a basic entry function using Flask framework.
+Introduce the method that config flask program with team.
+Design entities including: ingredient, recipe, user and web structure.
+
+25/06/2020:
+Have a team meeting to align the sub-tasks for each member.
+Update the code structure including home page.
+Update some flask-restful code for APIs.
+
+26/06/2020:
+Have a meeting with Yiwen Xu, discuss the method of using API.
+Successfully config the api structure.
+
+27/06/2020:
+Have a meeting with Yiwen Xu, align the functionality of user login, signup etc.
+Update backend code for structure of program coding.
+
+30/06/2020:
+Update the functions for user model including login, signup and session etc.
+
+--Week 5
+Working for Demo 1
+
+--Week 6
+Completed the function of user changing personal information.
+Create database for types of ingredients and recipes.
+Import the type data from file to database, which collected by MengXiao Shao and Richard respectively.
+
+--Week 7
+Update several functions including show published recipes, favorites recipes.
+Update the functions for reading data(ingredients and recipes) and save them to database.
+
+--Week 8
+Working on demo2.
+Update search function, search by ingredient, recommend ingredient to running list.
+Update function for keeping running list.
+
+--Week 9
+Discuss user stories on jira with Mengxiao Shao.
+Update sear function, and recommend functions.
+Update publish recipe recipe, align with Yiwen Xu.
+
+--Week 10
+Finish all coding, align request and responses with Yiwen Xu.
